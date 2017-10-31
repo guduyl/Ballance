@@ -1,0 +1,4 @@
+#ifndef BALLANCEPATH_H
+#define BALLANCEPATH_H
+
+#endif // BALLANCEPATH_H
