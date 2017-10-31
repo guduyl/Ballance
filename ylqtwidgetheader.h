@@ -13,6 +13,7 @@
 #include <GL/glu.h>
 
 #include <QDesktopWidget>
+#include <QApplication>
 
 #include <QPainter>
 

@@ -1,6 +1,5 @@
 
 #include "ballance.h"
-#include "ui_ballance.h"
 
 
 
@@ -8,7 +7,6 @@
 
 Ballance::Ballance(QWidget *parent) :
 	QWidget(parent),
-	ui(new Ui::Ballance),
 	m_nWidth(800),
 	m_nHeight(600),
 
@@ -30,7 +28,6 @@ Ballance::Ballance(QWidget *parent) :
 
 	m_nCurrentStatus(Ballance::PAGE_START)
 {
-	ui->setupUi(this);
 	this->mySetLayout();
 }
 
