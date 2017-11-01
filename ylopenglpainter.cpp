@@ -43,43 +43,51 @@ void YLOpenGLPainter::ShowScreen2(const QQuaternion &quaternion, const GLuint *t
 {
 	//屏幕上方
 	SetDrawAttr(QVector3D(-6*MMM, 4*MMM, -16*MMM), quaternion, texture[5]);
-	glutWireSphere(2*MMM, 10, 10);
+//	glutWireSphere(2*MMM, 10, 10);
 	SetDrawAttr(QVector3D(0, 4*MMM, -16*MMM), quaternion, texture[5]);
-	glutWireSphere(2*MMM, 20, 20);
+//	glutWireSphere(2*MMM, 20, 20);
 	SetDrawAttr(QVector3D(6*MMM, 4*MMM, -16*MMM), quaternion, texture[5]);
-	glutWireSphere(2*MMM, 30, 30);
+//	glutWireSphere(2*MMM, 30, 30);
 	//屏幕下方
 	SetDrawAttr(QVector3D(-6*MMM, -3*MMM, -16*MMM), quaternion, texture[5]);
-	glutWireSphere(2*MMM, 40, 40);
+//	glutWireSphere(2*MMM, 40, 40);
 	SetDrawAttr(QVector3D(0, -3*MMM, -16*MMM), quaternion, texture[5]);
-	glutWireSphere(2*MMM, 50, 50);
+//	glutWireSphere(2*MMM, 50, 50);
 	SetDrawAttr(QVector3D(6*MMM, -3*MMM, -16*MMM), quaternion, texture[5]);
-	glutWireSphere(2*MMM, 60, 60);
+//	glutWireSphere(2*MMM, 60, 60);
 }
 
 void YLOpenGLPainter::ShowScreen3(const QQuaternion &quaternion, const GLuint *texture)
 {
 	//屏幕上方
 	SetDrawAttr(QVector3D(-6*MMM, 4*MMM, -16*MMM), quaternion, texture[5]);
-	glutSolidSphere(2*MMM, 10, 10);
+//	glutSolidSphere(2*MMM, 10, 10);
 	SetDrawAttr(QVector3D(0, 4*MMM, -16*MMM), quaternion, texture[5]);
-	glutSolidSphere(2*MMM, 20, 20);
+//	glutSolidSphere(2*MMM, 20, 20);
 	SetDrawAttr(QVector3D(6*MMM, 4*MMM, -16*MMM), quaternion, texture[5]);
-	glutSolidSphere(2*MMM, 30, 30);
+//	glutSolidSphere(2*MMM, 30, 30);
 	//屏幕下方
 	SetDrawAttr(QVector3D(-6*MMM, -3*MMM, -16*MMM), quaternion, texture[5]);
-	glutSolidSphere(2*MMM, 40, 40);
+//	glutSolidSphere(2*MMM, 40, 40);
 	SetDrawAttr(QVector3D(0, -3*MMM, -16*MMM), quaternion, texture[5]);
-	glutSolidSphere(2*MMM, 50, 50);
+//	glutSolidSphere(2*MMM, 50, 50);
 	SetDrawAttr(QVector3D(6*MMM, -3*MMM, -16*MMM), quaternion, texture[5]);
-	glutSolidSphere(2*MMM, 60, 60);
+//	glutSolidSphere(2*MMM, 60, 60);
 }
 
 void YLOpenGLPainter::ShowScreen4(const QQuaternion &quaternion, const GLuint *texture)
 {
 	//屏幕中央
-	SetDrawAttr(QVector3D(0, 0, -16*MMM), quaternion, texture[5]);
-	glutWireSphere(2*MMM, 30, 30);
+	SetDrawAttr(QVector3D(0, 0, -16*MMM), quaternion, texture[4]);
+//	glutWireSphere(2*MMM, 30, 30);
+	GLUquadricObj* qobj;
+	qobj = gluNewQuadric();
+	glPushMatrix();
+	glBindTexture(GL_TEXTURE_2D, texture[4]);
+	gluQuadricTexture(qobj, GL_TRUE);
+	gluSphere(qobj, 2*MMM, 30, 30);
+	glPopMatrix();
+//	glutSwapBuffers();
 }
 
 
@@ -394,7 +402,7 @@ void YLOpenGLPainter::DrawMagicCube()
 void YLOpenGLPainter::DrawOrb()
 {
 	glColor4f(1, 1, 1, 1);
-	glutWireSphere(2*MMM, 10, 10);
+//	glutWireSphere(2*MMM, 10, 10);
 }
 
 

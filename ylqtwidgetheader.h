@@ -42,8 +42,6 @@
 #include <QQuaternion>
 #include <QBasicTimer>
 
-#include "glutdlls37beta/glut.h"
-
 
 
 
