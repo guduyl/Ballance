@@ -56,7 +56,8 @@ DISTFILES += \
     resource/img/earth1.ico \
     resource/ballance.ico \
     resource/ballance.rc \
-    README.md
+    README.md \
+    RECORD.md
 
 
 
