@@ -3,7 +3,7 @@
 
 
 
-#define MMM 2
+#define MMM 1
 
 
 
@@ -21,86 +21,98 @@ YLOpenGLPainter::~YLOpenGLPainter()
 
 
 
-void YLOpenGLPainter::ShowScreen1(const QQuaternion &quaternion, const GLuint *texture)
+void YLOpenGLPainter::ShowScreen1(const QQuaternion *quaternion, const GLuint *texture, QMatrix4x4 *eyematrix)
 {
 	//屏幕上方
-	SetDrawAttr(QVector3D(-6*MMM, 4*MMM, -16*MMM), quaternion, texture[0]);
+	SetDrawAttr(QVector3D(-6*MMM, 4*MMM, -16*MMM), quaternion, &texture[1], eyematrix);
 	DrawTriangle();
-	SetDrawAttr(QVector3D(0, 4*MMM, -16*MMM), quaternion, texture[1]);
+	SetDrawAttr(QVector3D(0, 4*MMM, -16*MMM), quaternion, &texture[2], eyematrix);
 	DrawSquare();
-	SetDrawAttr(QVector3D(6*MMM, 4*MMM, -16*MMM), quaternion, texture[2]);
+	SetDrawAttr(QVector3D(6*MMM, 4*MMM, -16*MMM), quaternion, &texture[3], eyematrix);
 	DrawHexagon();
 	//屏幕下方
-	SetDrawAttr(QVector3D(-6*MMM, -3*MMM, -16*MMM), quaternion, texture[3]);
+	SetDrawAttr(QVector3D(-6*MMM, -3*MMM, -16*MMM), quaternion, &texture[4], eyematrix);
 	DrawpYramid();
-	SetDrawAttr(QVector3D(0, -3*MMM, -16*MMM), quaternion, texture[4]);
+	SetDrawAttr(QVector3D(0, -3*MMM, -16*MMM), quaternion, &texture[5], eyematrix);
 	DrawMagicCube();
-	SetDrawAttr(QVector3D(6*MMM, -3*MMM, -16*MMM), quaternion, texture[5]);
-	DrawOrb();
+	SetDrawAttr(QVector3D(6*MMM, -3*MMM, -16*MMM), quaternion, &texture[6], eyematrix);
+	DrawOrb(2*MMM, 30, 30);
 }
 
-void YLOpenGLPainter::ShowScreen2(const QQuaternion &quaternion, const GLuint *texture)
+void YLOpenGLPainter::ShowScreen2(const QQuaternion *quaternion, const GLuint *texture, QMatrix4x4 *eyematrix)
 {
 	//屏幕上方
-	SetDrawAttr(QVector3D(-6*MMM, 4*MMM, -16*MMM), quaternion, texture[5]);
-//	glutWireSphere(2*MMM, 10, 10);
-	SetDrawAttr(QVector3D(0, 4*MMM, -16*MMM), quaternion, texture[5]);
-//	glutWireSphere(2*MMM, 20, 20);
-	SetDrawAttr(QVector3D(6*MMM, 4*MMM, -16*MMM), quaternion, texture[5]);
-//	glutWireSphere(2*MMM, 30, 30);
+	SetDrawAttr(QVector3D(-6*MMM, 4*MMM, -16*MMM), quaternion, &texture[1], eyematrix);
+	DrawOrb(2*MMM, 10, 10);
+	SetDrawAttr(QVector3D(0, 4*MMM, -16*MMM), quaternion, &texture[2], eyematrix);
+	DrawOrb(2*MMM, 20, 20);
+	SetDrawAttr(QVector3D(6*MMM, 4*MMM, -16*MMM), quaternion, &texture[3], eyematrix);
+	DrawOrb(2*MMM, 30, 30);
 	//屏幕下方
-	SetDrawAttr(QVector3D(-6*MMM, -3*MMM, -16*MMM), quaternion, texture[5]);
-//	glutWireSphere(2*MMM, 40, 40);
-	SetDrawAttr(QVector3D(0, -3*MMM, -16*MMM), quaternion, texture[5]);
-//	glutWireSphere(2*MMM, 50, 50);
-	SetDrawAttr(QVector3D(6*MMM, -3*MMM, -16*MMM), quaternion, texture[5]);
-//	glutWireSphere(2*MMM, 60, 60);
+	SetDrawAttr(QVector3D(-6*MMM, -3*MMM, -16*MMM), quaternion, &texture[4], eyematrix);
+	DrawOrb(2*MMM, 40, 40);
+	SetDrawAttr(QVector3D(0, -3*MMM, -16*MMM), quaternion, &texture[5], eyematrix);
+	DrawOrb(2*MMM, 50, 50);
+	SetDrawAttr(QVector3D(6*MMM, -3*MMM, -16*MMM), quaternion, &texture[6], eyematrix);
+	DrawOrb(2*MMM, 60, 60);
 }
 
-void YLOpenGLPainter::ShowScreen3(const QQuaternion &quaternion, const GLuint *texture)
-{
-	//屏幕上方
-	SetDrawAttr(QVector3D(-6*MMM, 4*MMM, -16*MMM), quaternion, texture[5]);
-//	glutSolidSphere(2*MMM, 10, 10);
-	SetDrawAttr(QVector3D(0, 4*MMM, -16*MMM), quaternion, texture[5]);
-//	glutSolidSphere(2*MMM, 20, 20);
-	SetDrawAttr(QVector3D(6*MMM, 4*MMM, -16*MMM), quaternion, texture[5]);
-//	glutSolidSphere(2*MMM, 30, 30);
-	//屏幕下方
-	SetDrawAttr(QVector3D(-6*MMM, -3*MMM, -16*MMM), quaternion, texture[5]);
-//	glutSolidSphere(2*MMM, 40, 40);
-	SetDrawAttr(QVector3D(0, -3*MMM, -16*MMM), quaternion, texture[5]);
-//	glutSolidSphere(2*MMM, 50, 50);
-	SetDrawAttr(QVector3D(6*MMM, -3*MMM, -16*MMM), quaternion, texture[5]);
-//	glutSolidSphere(2*MMM, 60, 60);
-}
-
-void YLOpenGLPainter::ShowScreen4(const QQuaternion &quaternion, const GLuint *texture)
+void YLOpenGLPainter::ShowScreen3(const QQuaternion *quaternion, const GLuint *texture, QMatrix4x4 *eyematrix)
 {
 	//屏幕中央
-	SetDrawAttr(QVector3D(0, 0, -16*MMM), quaternion, texture[4]);
-//	glutWireSphere(2*MMM, 30, 30);
-	GLUquadricObj* qobj;
-	qobj = gluNewQuadric();
-	glPushMatrix();
-	glBindTexture(GL_TEXTURE_2D, texture[4]);
-	gluQuadricTexture(qobj, GL_TRUE);
-	gluSphere(qobj, 2*MMM, 30, 30);
-	glPopMatrix();
-//	glutSwapBuffers();
+	SetDrawAttr(QVector3D(0, 0, -16*MMM), quaternion, &texture[0], eyematrix);
+//	glRotatef(-90, 1, 0, 0);
+	glLineWidth(3);
+	glBegin(GL_LINES);
+	glColor3f(1.0, 0.0, 0.0);
+	glVertex3f(-32*MMM, 0, 0);
+	glColor3f(1.0, 1.0, 1.0);
+	glVertex3f(32*MMM, 0, 0);
+	glColor3f(0.0, 1.0, 0.0);
+	glVertex3f(0, -32*MMM, 0);
+	glColor3f(1.0, 1.0, 1.0);
+	glVertex3f(0, 32*MMM, 0);
+	glColor3f(0.0, 0.0, 1.0);
+	glVertex3f(0, 0, -32*MMM);
+	glColor3f(1.0, 1.0, 1.0);
+	glVertex3f(0, 0, 32*MMM);
+	glEnd();
+	glLineWidth(1);
+	glBegin(GL_LINES);
+	glColor3f(1.0, 1.0, 0.0);
+	for (int i = -32; i <= 32; ++i)
+	{
+		if (i == 0)
+			continue;
+		glVertex3f(-32*MMM, i, 0);
+		glVertex3f(32*MMM, i, 0);
+		glVertex3f(i, -32*MMM, 0);
+		glVertex3f(i, 32*MMM, 0);
+	}
+	glEnd();
+	glColor3f(1.0, 1.0, 1.0);
+}
+
+void YLOpenGLPainter::ShowScreen4(const QQuaternion *quaternion, const GLuint *texture, QMatrix4x4 *eyematrix)
+{
+	//屏幕
 }
 
 
 
-void YLOpenGLPainter::SetDrawAttr(const QVector3D &vector, const QQuaternion &quaternion, const GLuint texture)
+void YLOpenGLPainter::SetDrawAttr(const QVector3D &vector, const QQuaternion *quaternion, const GLuint *texture, QMatrix4x4 *eyematrix)
 {
-	QMatrix4x4 matrix;
 	glLoadIdentity();
+	QMatrix4x4 matrix;
 	matrix.setToIdentity();
 	matrix.translate(vector);
-	matrix.rotate(quaternion);
+	if (quaternion != NULL)
+		matrix.rotate(*quaternion);
+	if (eyematrix != NULL)
+		matrix = *eyematrix * matrix;
 	glLoadMatrixf(matrix.data());
-	glBindTexture(GL_TEXTURE_2D, texture);
+	if (texture != NULL)
+		glBindTexture(GL_TEXTURE_2D, *texture);
 }
 
 
@@ -399,10 +411,12 @@ void YLOpenGLPainter::DrawMagicCube()
  *		球体
  */
 #define PI 2.1415926f
-void YLOpenGLPainter::DrawOrb()
+void YLOpenGLPainter::DrawOrb(double radius, int slices, int stacks)
 {
-	glColor4f(1, 1, 1, 1);
-//	glutWireSphere(2*MMM, 10, 10);
+//	glColor4f(1, 1, 1, 1);
+	GLUquadricObj *qobj = gluNewQuadric();
+	gluQuadricTexture(qobj, GL_TRUE);
+	gluSphere(qobj, radius, slices, stacks);
 }
 
 

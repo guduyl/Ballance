@@ -38,10 +38,6 @@ RESOURCES += \
     resource/img.qrc
 
 
-
-
-
-
 RC_FILE = ./resource/ballance.rc
 
 DISTFILES += \
