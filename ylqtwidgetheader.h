@@ -46,5 +46,20 @@
 
 
 
+#define YLAbs(x)											((x) < 0 ? (-(x)) : (x))
+#define YLPI												(3.14159f)
+#define YLArcLenPerDegree									(0.01745f)
+#define YLSqrt2												(1.41421f)
+#define YLSqrt3												(1.73205f)
+
+
+
+
+
+
+
+
+
+
 
 #endif // YLQTWIDGETHEADER_H

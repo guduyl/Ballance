@@ -1,20 +1,94 @@
 
 # Ballance Project Recode
 
-## 20171031
 
-1. 项目准备：
+## 2017年10月26日 周四
+
+1. 项目启动
+
+2. 项目准备
+* Win10系统
+* Qt开发环境
+* 云服务器
+
+3. 项目进展
+* **创建**主界面类`Ballance : public QWidget`
+	+ 搭建主要的菜单界面
+* **创建**保存地图的类`CBallancePath`
+
+
+## 2017年10月27日 周五
+
+项目进展
+* 创建综合头文件ylqtwidgetheader.h
+* **创建**游戏界面类`BallancepathOpenglWidget : public QGLWidget`
+	+ 画出简单的图形（二维和三维）并上色
+* 分离键盘事件
+
+
+## 2017年10月28日 周六
+
+
+## 2017年10月29日 周日
+
+
+## 2017年10月30日 周一
+* `BallancepathOpenglWidget : public QGLWidget`
+	+ 图形贴图
+	+ 画Ball，研究其旋转属性
+
+
+## 2017年10月31日 周二
+
+1. 项目准备
 * 创建GitHub仓库
 * 完善项目目录结构
 
 2. 项目进展
-* 搭建主要的菜单界面
-* 画出简单的图形（二维和三维）
+* `BallancepathOpenglWidget : public QGLWidget`
+	+ Ball贴图、旋转
+* **创建**我的画家类`YLOpenGLPainter`
+	+ 整理现阶段能够画出的图形为静态方法
 
 
-## 20171101
+## 2017年11月01日 周三
 
 项目进展
-* 构建三维坐标系，在XoY平面中移动Ball
+* `BallancepathOpenglWidget : public QGLWidget`
+	+ 构建三维坐标系，在XoY平面中滚动Ball
+	+ 构建观察点，使其与Ball的平移分量相对静止
 
 
+## 2017年11月02日 周四
+
+项目进展
+* `BallancepathOpenglWidget : public QGLWidget`
+	+ 规范三维坐标系
+	+ 使用定时器处理四向按键，使移动事件更加灵活，并能够斜方向滚动
+	+ 计算旋转弧度与移动距离，使Ball更加真实
+* `CBallancePath`
+	+ 移植map计算规则
+* **创建**四向树类模板`YLTree4`
+
+
+
+
+
+# ============================================================
+
+
+# Ballance Project 更新频率
+
+
+## 2017年10月31日 ———— 2017年11月01日
+学习GitHub使用方法
+
+
+## 2017年11月02日 ———— 至今
+工作日每天晚上10点左右更新代码
+
+
+
+
+
+# ============================================================

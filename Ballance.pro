@@ -22,7 +22,8 @@ HEADERS  += ballance.h \
     ballancepath.h \
 	ballancepathopenglwidget.h \
     ylqtwidgetheader.h \
-    ylopenglpainter.h
+    ylopenglpainter.h \
+    yltree4.h
 
 
 
