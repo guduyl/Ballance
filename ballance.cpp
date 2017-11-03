@@ -28,6 +28,8 @@ Ballance::Ballance(QWidget *parent) :
 
 	m_nCurrentStatus(Ballance::PAGE_START)
 {
+	qDebug() << "Ballance::Ballance";
+
 	this->mySetLayout();
 }
 
@@ -35,6 +37,8 @@ Ballance::Ballance(QWidget *parent) :
 
 Ballance::~Ballance()
 {
+	qDebug() << "Ballance::~Ballance";
+
 	delete m_pbnNewgame;
 	delete m_pbnCustom;
 	delete m_pbnScore;
@@ -56,17 +60,20 @@ Ballance::~Ballance()
 
 void Ballance::mySetLayout()
 {
+	qDebug() << "Ballance::mySetLayout";
+
 	//Main
 	this->resize(m_nWidth, m_nHeight);
 	this->setFixedSize(m_nWidth, m_nHeight);
 	QDesktopWidget* desktop = QApplication::desktop();
+	this->move((desktop->width() - m_nWidth) / 2 + 700, (desktop->height() - m_nHeight - 100) / 2);
 //	this->move((desktop->width() - m_nWidth) / 2 + 500, (desktop->height() - m_nHeight - 100) / 2);
-	this->move((desktop->width() - m_nWidth) / 2, (desktop->height() - m_nHeight - 100) / 2);
+//	this->move((desktop->width() - m_nWidth) / 2, (desktop->height() - m_nHeight - 100) / 2);
 	this->setWindowIcon(QIcon(":/icon/earth1.ico"));
 
-	this->showFullScreen();
-	m_nWidth = this->width();
-	m_nHeight = this->height();
+//	this->showFullScreen();
+//	m_nWidth = this->width();
+//	m_nHeight = this->height();
 
 	m_imgBg.load(":/bgimg/earth.jpg");
 
@@ -102,7 +109,7 @@ void Ballance::mySetLayout()
 
 	//the button Back2Start
 	m_pbnBack2Start->setMinimumHeight(50);
-	this->connect(m_pbnBack2Start, SIGNAL(clicked()), this, SLOT(on_bnBack2Start()));
+	this->connect(m_pbnBack2Start, SIGNAL(clicked()), this, SLOT(on_bnShowStartPage()));
 
 	//LevelPage
 	m_pwLevel->setFixedSize(m_nWidth, m_nHeight);
@@ -137,7 +144,11 @@ void Ballance::mySetLayout()
 		m_pbglwGame->hide();
 	}
 
-//	this->on_bnBack2Start();
+//	this->on_bnShowStartPage();
+//	this->on_bnNewgame();
+//	this->on_bnCustom();
+//	this->on_bnScore();
+//	this->on_bnAbout();
 	this->on_bnLevels();
 }
 
@@ -147,6 +158,8 @@ void Ballance::mySetLayout()
 
 void Ballance::paintEvent(QPaintEvent *e)
 {
+//	qDebug() << "Ballance::paintEvent";
+
 	Q_UNUSED(e);
 	QPainter p(this);
 	p.drawImage(QRect(0, 0, m_nWidth, m_nHeight), m_imgBg);
@@ -156,11 +169,13 @@ void Ballance::paintEvent(QPaintEvent *e)
 
 void Ballance::keyPressEvent(QKeyEvent *event)
 {
+//	qDebug() << "Ballance::keyPressEvent";
+
 	switch (event->key())
 	{
 	case Qt::Key_F11:						//F11为全屏和普通屏的切换键
 	{
-		qDebug() << "Ballance::keyPressEvent: " << "Key_F11";
+		qDebug() << "Ballance::keyPressEvent" << "Key_F11";
 		if (this->isFullScreen())
 		{
 			this->showNormal();
@@ -205,34 +220,34 @@ void Ballance::keyPressEvent(QKeyEvent *event)
 	}
 	case Qt::Key_Up:
 	{
-		qDebug() << "Ballance::keyPressEvent: " << "Key_Up";
+		qDebug() << "Ballance::keyPressEvent" << "Key_Up";
 		break;
 	}
 	case Qt::Key_Down:
 	{
-		qDebug() << "Ballance::keyPressEvent: " << "Key_Down";
+		qDebug() << "Ballance::keyPressEvent" << "Key_Down";
 		break;
 	}
 	case Qt::Key_Left:
 	{
-		qDebug() << "Ballance::keyPressEvent: " << "Key_Left";
+		qDebug() << "Ballance::keyPressEvent" << "Key_Left";
 		break;
 	}
 	case Qt::Key_Right:
 	{
-		qDebug() << "Ballance::keyPressEvent: " << "Key_Right";
+		qDebug() << "Ballance::keyPressEvent" << "Key_Right";
 		break;
 	}
 	case Qt::Key_Escape:					//ESC为退出键
 	{
-		qDebug() << "Ballance::keyPressEvent: " << "Key_Escape";
+		qDebug() << "Ballance::keyPressEvent" << "Key_Escape";
 		if (m_nCurrentStatus == Ballance::PAGE_START)
 		{
 //			this->on_bnQuit();
 		}
 		else if (m_nCurrentStatus > Ballance::PAGES && m_nCurrentStatus < Ballance::PAGES_END)
 		{
-			this->on_bnBack2Start();
+			this->on_bnShowStartPage();
 		}
 		else if (m_nCurrentStatus > Ballance::GAMESTATUS && m_nCurrentStatus < Ballance::GAMESTATUS_END)
 		{
@@ -253,6 +268,8 @@ void Ballance::keyPressEvent(QKeyEvent *event)
 
 void Ballance::on_bnNewgame()
 {
+	qDebug() << "Ballance::on_bnNewgame";
+
 	m_nCurrentStatus = Ballance::PAGE_LEVEL;
 	m_pwStart->hide();
 	m_pwLevel->move(0, 0);
@@ -265,6 +282,8 @@ void Ballance::on_bnNewgame()
 
 void Ballance::on_bnCustom()
 {
+	qDebug() << "Ballance::on_bnCustom";
+
 //	m_nCurrentStatus = Ballance::PAGE_CUSTOM;
 }
 
@@ -272,6 +291,8 @@ void Ballance::on_bnCustom()
 
 void Ballance::on_bnScore()
 {
+	qDebug() << "Ballance::on_bnScore";
+
 //	m_nCurrentStatus = Ballance::PAGE_SCORE;
 }
 
@@ -279,6 +300,8 @@ void Ballance::on_bnScore()
 
 void Ballance::on_bnAbout()
 {
+	qDebug() << "Ballance::on_bnAbout";
+
 //	m_nCurrentStatus = Ballance::PAGE_ABOUT;
 }
 
@@ -286,13 +309,17 @@ void Ballance::on_bnAbout()
 
 void Ballance::on_bnQuit()
 {
+	qDebug() << "Ballance::on_bnQuit";
+
 	this->close();
 }
 
 
 
-void Ballance::on_bnBack2Start()
+void Ballance::on_bnShowStartPage()
 {
+	qDebug() << "Ballance::on_bnShowStartPage";
+
 	m_nCurrentStatus = Ballance::PAGE_START;
 	m_pwLevel->hide();
 	m_pwStart->move(0, 0);
@@ -305,6 +332,8 @@ void Ballance::on_bnBack2Start()
 
 void Ballance::on_bnLevels()
 {
+	qDebug() << "Ballance::on_bnLevels";
+
 	m_nCurrentStatus = Ballance::GAMESTATUS_START;
 	m_pwLevel->hide();
 	m_pbglwGame = new BallancepathOpenglWidget(this);

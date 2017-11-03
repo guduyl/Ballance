@@ -34,12 +34,15 @@ win32:LIBS += -lOpengl32 \
 #				-lglut
 
 
-
 RESOURCES += \
     resource/img.qrc
 
 
 RC_FILE = ./resource/ballance.rc
+
+
+DEFINES += YL_WIN32_QT
+
 
 DISTFILES += \
     resource/img/earth.jpg \
@@ -54,7 +57,7 @@ DISTFILES += \
     resource/ballance.ico \
     resource/ballance.rc \
     README.md \
-    RECORD.md
+	RECORD.md
 
 
 

@@ -22,10 +22,70 @@ CBallancePath::CBallancePath() :
 
 	this->initdata();
 
-//	qDebug() << m_vctThepath[0];
-//	std::ostream os;
-//	os << m_tre4Thepath;
-//	qDebug() << os;
+//	qDebug() << "m_vctThepath";
+//	foreach(Thepath p, m_vctThepath)
+//		qDebug() << p;
+
+	m_tre4Thepath = new YLTree4<Thepath>(Thepath{PATHTYPESTART | PATHDIRNULL,   0, 0, 0, 0, 0, &m_szStart});
+	YLTree4<Thepath>::NODE *p = m_tre4Thepath->getNodeRoot();
+	p = m_tre4Thepath->pushNl(p, Thepath{PATHTYPEWOOD3 |    PATHDIRN,  10, 0, 0, 0, 0, &m_szWood3});
+	p = m_tre4Thepath->pushWl(p, Thepath{PATHTYPEWOOD3 |    PATHDIRW,  10, 0, 0, 0, 0, &m_szWood3});
+	p = m_tre4Thepath->pushSl(p, Thepath{PATHTYPEWOOD3 |    PATHDIRS,  20, 0, 0, 0, 0, &m_szWood3});
+	p = m_tre4Thepath->pushEl(p, Thepath{PATHTYPEWOOD3 |    PATHDIRE,  20, 0, 0, 0, 0, &m_szWood3});
+	p = m_tre4Thepath->pushNl(p, Thepath{PATHTYPEWOOD3 |    PATHDIRN,  10, 0, 0, 0, 0, &m_szWood3});
+	p = m_tre4Thepath->pushNl(p, Thepath{PATHTYPESTOP  | PATHDIRNULL,   0, 0, 0, 0, 0,  &m_szStop});
+
+	qDebug() << "m_tre4Thepath&";
+	int i = 0;
+	m_tre4Thepath->traversalPreorder([&](Thepath &path, YLTree4<Thepath>::NODE *n)
+	{
+		qDebug() << ++i << path;
+	});
+
+	qDebug() << "m_tre4Thepath";
+	m_tre4Thepath->traversalPreorder([&](Thepath &path, YLTree4<Thepath>::NODE *n)
+	{
+		qDebug() << path;
+	});
+
+//	YLTree4<int> *t = new YLTree4<int>(0);
+//	qDebug() << t->getSize();
+//	qDebug() << t->getDepth();
+//	YLTree4<int>::NODE *n = t->getNodeRoot();
+//	t->pushN(n, 1)->pushS(n, 2)->pushW(n, 3)->pushE(n, 4);
+//	n = t->getNodeN(t->getNodeRoot());
+//	t->pushN(n, 11)->pushS(n, 12);
+//	n = t->getNodeS(t->getNodeRoot());
+//	t->pushW(n, 23)->pushE(n, 24);
+//	n = t->getNodeW(t->getNodeRoot());
+//	t->pushN(n, 31)->pushW(n, 33);
+//	n = t->getNodeE(t->getNodeRoot());
+//	t->pushS(n, 42)->pushE(n, 44);
+//	qDebug() << "先序遍历";
+//	t->traversalPreorder([](int &x)
+//	{
+//		qDebug() << x;
+//		x = x + 2;
+//	});
+//	t->getDataRoot() = 111;
+//	qDebug() << "先序遍历";
+//	t->traversalPreorder([](int &x)
+//	{
+//		qDebug() << x;
+//	});
+//	qDebug() << "中序遍历";
+//	t->traversalInorder([](int &x)
+//	{
+//		qDebug() << x;
+//	});
+//	qDebug() << "后序遍历";
+//	t->traversalPostorder([](int &x)
+//	{
+//		qDebug() << x;
+//	});
+//	qDebug() << t->getSize();
+//	qDebug() << t->getDepth();
+//	t->clear();
 }
 
 
@@ -35,7 +95,8 @@ CBallancePath::~CBallancePath()
 	qDebug() << "CBallancePath::~CBallancePath";
 
 	m_vctThepath.clear();
-	m_tre4Thepath.clear();
+	m_tre4Thepath->clear();
+	delete m_tre4Thepath;
 }
 
 
@@ -44,142 +105,182 @@ void CBallancePath::initdata()
 {
 	qDebug() << "CBallancePath::initdata";
 
-	for (int i = 0; ; i++)
+//	m_tre4Thepath->traversalPreorder([&](Thepath &initdatapathunit, YLTree4<Thepath>::NODE *pinitdatanode)
+//	{
+//		Thepath preinitdatapathunit = m_tre4Thepath->getNodeParent(pinitdatanode)->nodeData;
+//		this->zzz(initdatapathunit, preinitdatapathunit);
+//	});
+
+//	m_tre4Thepath->traversalPreorder([](Thepath &initdatapathunit, YLTree4<Thepath>::NODE *pinitdatanode)
+//	{
+//		Thepath preinitdatapathunit = m_tre4Thepath->getNodeParent(pinitdatanode)->nodeData;
+//		this->zzz(initdatapathunit, preinitdatapathunit);
+//	});
+}
+
+void CBallancePath::xxx(Thepath &initdatapathunit, YLTree4<Thepath>::NODE *pinitdatanode)
+{
+	Thepath preinitdatapathunit = m_tre4Thepath->getNodeParent(pinitdatanode)->nodeData;
+	this->zzz(initdatapathunit, preinitdatapathunit);
+}
+
+void CBallancePath::zzz(Thepath &initdatapathunit, Thepath &preinitdatapathunit)
+{
+	switch (initdatapathunit.mode & PATHTYPE)
 	{
-		switch (m_vctThepath[i].mode & PATHTYPE)
+	case PATHTYPESTART :
+	{
+		initdatapathunit.posx1 = -initdatapathunit.imagesize->width() / 2;
+		initdatapathunit.posy1 = -initdatapathunit.imagesize->height() / 2;
+		initdatapathunit.posx2 = initdatapathunit.imagesize->width() / 2;
+		initdatapathunit.posy2 = initdatapathunit.imagesize->height() / 2;
+		break;
+	}
+	case PATHTYPEWOOD3 :
+	{
+		int temptype = preinitdatapathunit.mode & PATHTYPE;
+		int tempdir = preinitdatapathunit.mode & PATHDIR;
+		switch (initdatapathunit.mode & PATHDIR)
 		{
-		case PATHTYPESTART :
+		case PATHDIRN :
 		{
-			m_vctThepath[i].posx1 = -m_vctThepath[i].imagesize->width() / 2;
-			m_vctThepath[i].posy1 = -m_vctThepath[i].imagesize->height() / 2;
-			m_vctThepath[i].posx2 = m_vctThepath[i].imagesize->width() / 2;
-			m_vctThepath[i].posy2 = m_vctThepath[i].imagesize->height() / 2;
+			if (temptype == PATHTYPESTART)
+			{
+				initdatapathunit.posx1 = -m_szCross.width() / 2;
+				initdatapathunit.posy1 = preinitdatapathunit.posy1 + preinitdatapathunit.imagesize->height();
+			}
+			else if (tempdir == PATHDIRW)
+			{
+				initdatapathunit.posx1 = preinitdatapathunit.posx1 + preinitdatapathunit.imagesize->height() * preinitdatapathunit.length;
+				initdatapathunit.posy1 = preinitdatapathunit.posy1 + m_szCross.height();
+			}
+			else if (tempdir == PATHDIRE)
+			{
+				initdatapathunit.posx1 = preinitdatapathunit.posx1 - m_szCross.width();
+				initdatapathunit.posy1 = preinitdatapathunit.posy1 + m_szCross.height();
+			}
+			initdatapathunit.posx2 = initdatapathunit.posx1 + initdatapathunit.imagesize->width();
+			initdatapathunit.posy2 = initdatapathunit.posy1 + initdatapathunit.imagesize->height() * initdatapathunit.length;
 			break;
 		}
-		case PATHTYPEWOOD3 :
+		case PATHDIRS :
 		{
-			int temptype = m_vctThepath[i - 1].mode & PATHTYPE;
-			int tempdir = m_vctThepath[i - 1].mode & PATHDIR;
-			switch (m_vctThepath[i].mode & PATHDIR)
+			initdatapathunit.posy1 = preinitdatapathunit.posy1 - initdatapathunit.imagesize->height() * initdatapathunit.length;
+			initdatapathunit.posy2 = preinitdatapathunit.posy1;
+			if (temptype == PATHTYPESTART)
 			{
-			case PATHDIRN :
+				initdatapathunit.posx1 = -m_szCross.width() / 2;
+			}
+			else if (tempdir == PATHDIRW)
 			{
-				if (temptype == PATHTYPESTART)
-				{
-					m_vctThepath[i].posx1 = -m_szCross.width() / 2;
-					m_vctThepath[i].posy1 = m_vctThepath[i - 1].posy1 + m_vctThepath[i - 1].imagesize->height();
-				}
-				else if (tempdir == PATHDIRW)
-				{
-					m_vctThepath[i].posx1 = m_vctThepath[i - 1].posx1 + m_vctThepath[i - 1].imagesize->height() * m_vctThepath[i - 1].length;
-					m_vctThepath[i].posy1 = m_vctThepath[i - 1].posy1 + m_szCross.height();
-				}
-				else if (tempdir == PATHDIRE)
-				{
-					m_vctThepath[i].posx1 = m_vctThepath[i - 1].posx1 - m_szCross.width();
-					m_vctThepath[i].posy1 = m_vctThepath[i - 1].posy1 + m_szCross.height();
-				}
-				m_vctThepath[i].posx2 = m_vctThepath[i].posx1 + m_vctThepath[i].imagesize->width();
-				m_vctThepath[i].posy2 = m_vctThepath[i].posy1 + m_vctThepath[i].imagesize->height() * m_vctThepath[i].length;
-				break;
+				initdatapathunit.posx1 = preinitdatapathunit.posx1 + preinitdatapathunit.imagesize->height() * preinitdatapathunit.length;
 			}
-			case PATHDIRS :
+			else if (tempdir == PATHDIRE)
 			{
-				m_vctThepath[i].posy1 = m_vctThepath[i - 1].posy1 - m_vctThepath[i].imagesize->height() * m_vctThepath[i].length;
-				m_vctThepath[i].posy2 = m_vctThepath[i - 1].posy1;
-				if (temptype == PATHTYPESTART)
-				{
-					m_vctThepath[i].posx1 = -m_szCross.width() / 2;
-				}
-				else if (tempdir == PATHDIRW)
-				{
-					m_vctThepath[i].posx1 = m_vctThepath[i - 1].posx1 + m_vctThepath[i - 1].imagesize->height() * m_vctThepath[i - 1].length;
-				}
-				else if (tempdir == PATHDIRE)
-				{
-					m_vctThepath[i].posx1 = m_vctThepath[i - 1].posx1 - m_szCross.width();
-				}
-				m_vctThepath[i].posx2 = m_vctThepath[i].posx1 + m_vctThepath[i].imagesize->width();
-				break;
+				initdatapathunit.posx1 = preinitdatapathunit.posx1 - m_szCross.width();
 			}
-			case PATHDIRW :
-			{
-				if (temptype == PATHTYPESTART)
-				{
-					m_vctThepath[i].posx1 = m_vctThepath[i - 1].posx1 + m_vctThepath[i - 1].imagesize->width();
-					m_vctThepath[i].posy1 = -m_szCross.height() / 2;
-				}
-				else if (tempdir == PATHDIRN)
-				{
-					m_vctThepath[i].posx1 = m_vctThepath[i - 1].posx1 + m_szCross.width();
-					m_vctThepath[i].posy1 = m_vctThepath[i - 1].posy1 + m_vctThepath[i - 1].imagesize->height() * m_vctThepath[i - 1].length;
-				}
-				else if (tempdir == PATHDIRS)
-				{
-					m_vctThepath[i].posx1 = m_vctThepath[i - 1].posx1 + m_szCross.width();
-					m_vctThepath[i].posy1 = m_vctThepath[i - 1].posy1 - m_szCross.height();
-				}
-				m_vctThepath[i].posx2 = m_vctThepath[i].posx1 + m_vctThepath[i].imagesize->height() * m_vctThepath[i].length;
-				m_vctThepath[i].posy2 = m_vctThepath[i].posy1 + m_vctThepath[i].imagesize->width();
-				break;
-			}
-			case PATHDIRE :
-			{
-				m_vctThepath[i].posx1 = m_vctThepath[i - 1].posx1 - m_vctThepath[i].imagesize->height() * m_vctThepath[i].length;
-				m_vctThepath[i].posx2 = m_vctThepath[i - 1].posx1;
-				if (temptype == PATHTYPESTART)
-				{
-					m_vctThepath[i].posy1 = -m_szCross.height() / 2;
-				}
-				else if (tempdir == PATHDIRN)
-				{
-					m_vctThepath[i].posy1 = m_vctThepath[i - 1].posy1 + m_vctThepath[i - 1].imagesize->height() * m_vctThepath[i - 1].length;
-				}
-				else if (tempdir == PATHDIRS)
-				{
-					m_vctThepath[i].posy1 = m_vctThepath[i - 1].posy1 - m_szCross.height();
-				}
-				m_vctThepath[i].posy2 = m_vctThepath[i].posy1 + m_vctThepath[i].imagesize->width();
-				break;
-			}
-			}
+			initdatapathunit.posx2 = initdatapathunit.posx1 + initdatapathunit.imagesize->width();
 			break;
 		}
-		case PATHTYPESTOP :
+		case PATHDIRW :
 		{
-			switch (m_vctThepath[i - 1].mode & PATHDIR)
+			if (temptype == PATHTYPESTART)
 			{
-			case PATHDIRS :
+				initdatapathunit.posx1 = preinitdatapathunit.posx1 + preinitdatapathunit.imagesize->width();
+				initdatapathunit.posy1 = -m_szCross.height() / 2;
+			}
+			else if (tempdir == PATHDIRN)
 			{
-				m_vctThepath[i].posx1 = m_vctThepath[i - 1].posx1 - ((m_vctThepath[i].imagesize->width() - m_szCross.width()) / 2);
-				m_vctThepath[i].posy1 = m_vctThepath[i - 1].posy1 - m_vctThepath[i].imagesize->height();
-				break;
+				initdatapathunit.posx1 = preinitdatapathunit.posx1 + m_szCross.width();
+				initdatapathunit.posy1 = preinitdatapathunit.posy1 + preinitdatapathunit.imagesize->height() * preinitdatapathunit.length;
 			}
-			case PATHDIRN :
+			else if (tempdir == PATHDIRS)
 			{
-				m_vctThepath[i].posx1 = m_vctThepath[i - 1].posx1 - ((m_vctThepath[i].imagesize->width() - m_szCross.width()) / 2);
-				m_vctThepath[i].posy1 = m_vctThepath[i - 1].posy1 + m_vctThepath[i - 1].imagesize->height() * m_vctThepath[i - 1].length;
-				break;
+				initdatapathunit.posx1 = preinitdatapathunit.posx1 + m_szCross.width();
+				initdatapathunit.posy1 = preinitdatapathunit.posy1 - m_szCross.height();
 			}
-			case PATHDIRE :
+			initdatapathunit.posx2 = initdatapathunit.posx1 + initdatapathunit.imagesize->height() * initdatapathunit.length;
+			initdatapathunit.posy2 = initdatapathunit.posy1 + initdatapathunit.imagesize->width();
+			break;
+		}
+		case PATHDIRE :
+		{
+			initdatapathunit.posx1 = preinitdatapathunit.posx1 - initdatapathunit.imagesize->height() * initdatapathunit.length;
+			initdatapathunit.posx2 = preinitdatapathunit.posx1;
+			if (temptype == PATHTYPESTART)
 			{
-				m_vctThepath[i].posx1 = m_vctThepath[i - 1].posx1 - m_vctThepath[i].imagesize->width();
-				m_vctThepath[i].posy1 = m_vctThepath[i - 1].posy1 - ((m_vctThepath[i].imagesize->height() - m_szCross.height()) / 2);
-				break;
+				initdatapathunit.posy1 = -m_szCross.height() / 2;
 			}
-			case PATHDIRW :
+			else if (tempdir == PATHDIRN)
 			{
-				m_vctThepath[i].posx1 = m_vctThepath[i - 1].posx1 + m_vctThepath[i - 1].imagesize->height() * m_vctThepath[i - 1].length;
-				m_vctThepath[i].posy1 = m_vctThepath[i - 1].posy1 - ((m_vctThepath[i].imagesize->height() - m_szCross.height()) / 2);
-				break;
+				initdatapathunit.posy1 = preinitdatapathunit.posy1 + preinitdatapathunit.imagesize->height() * preinitdatapathunit.length;
 			}
+			else if (tempdir == PATHDIRS)
+			{
+				initdatapathunit.posy1 = preinitdatapathunit.posy1 - m_szCross.height();
 			}
-			m_vctThepath[i].posx2 = m_vctThepath[i].posx1 + m_vctThepath[i].imagesize->width();
-			m_vctThepath[i].posy2 = m_vctThepath[i].posy1 + m_vctThepath[i].imagesize->height();
+			initdatapathunit.posy2 = initdatapathunit.posy1 + initdatapathunit.imagesize->width();
 			break;
 		}
 		}
-		if (m_vctThepath[i].mode == PATHTYPESTOP)
+		break;
+	}
+	case PATHTYPESTOP :
+	{
+		switch (preinitdatapathunit.mode & PATHDIR)
+		{
+		case PATHDIRS :
+		{
+			initdatapathunit.posx1 = preinitdatapathunit.posx1 - ((initdatapathunit.imagesize->width() - m_szCross.width()) / 2);
+			initdatapathunit.posy1 = preinitdatapathunit.posy1 - initdatapathunit.imagesize->height();
 			break;
+		}
+		case PATHDIRN :
+		{
+			initdatapathunit.posx1 = preinitdatapathunit.posx1 - ((initdatapathunit.imagesize->width() - m_szCross.width()) / 2);
+			initdatapathunit.posy1 = preinitdatapathunit.posy1 + preinitdatapathunit.imagesize->height() * preinitdatapathunit.length;
+			break;
+		}
+		case PATHDIRE :
+		{
+			initdatapathunit.posx1 = preinitdatapathunit.posx1 - initdatapathunit.imagesize->width();
+			initdatapathunit.posy1 = preinitdatapathunit.posy1 - ((initdatapathunit.imagesize->height() - m_szCross.height()) / 2);
+			break;
+		}
+		case PATHDIRW :
+		{
+			initdatapathunit.posx1 = preinitdatapathunit.posx1 + preinitdatapathunit.imagesize->height() * preinitdatapathunit.length;
+			initdatapathunit.posy1 = preinitdatapathunit.posy1 - ((initdatapathunit.imagesize->height() - m_szCross.height()) / 2);
+			break;
+		}
+		}
+		initdatapathunit.posx2 = initdatapathunit.posx1 + initdatapathunit.imagesize->width();
+		initdatapathunit.posy2 = initdatapathunit.posy1 + initdatapathunit.imagesize->height();
+		break;
+	}
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

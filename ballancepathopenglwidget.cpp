@@ -26,6 +26,8 @@ BallancepathOpenglWidget::BallancepathOpenglWidget(QWidget *parent) :
 	m_bPressBnA(false),
 	m_bPressBnD(false)
 {
+	qDebug() << "BallancepathOpenglWidget::BallancepathOpenglWidget";
+
 	QVector3D delta;
 	//调整看点
 	delta = QVector3D(0, -1, 0).normalized();
@@ -41,15 +43,14 @@ BallancepathOpenglWidget::BallancepathOpenglWidget(QWidget *parent) :
 	//调整球体位置
 	m_vct4Ball += QVector3D(0, 0, 1);
 
-	//开启定时器
-	m_nTmrMoveEverything = this->startTimer(30);
-
 }
 
 
 
 BallancepathOpenglWidget::~BallancepathOpenglWidget()
 {
+	qDebug() << "BallancepathOpenglWidget::~BallancepathOpenglWidget";
+
 	delete m_ThePath;
 	delete[] m_punTexture;
 }
@@ -64,14 +65,17 @@ BallancepathOpenglWidget::~BallancepathOpenglWidget()
  */
 void BallancepathOpenglWidget::initializeGL()
 {
+	qDebug() << "BallancepathOpenglWidget::initializeGL";
+
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glShadeModel(GL_SMOOTH);													//启用阴影平滑
 	glClearDepth(1.0);															//设置深度缓存
 	glEnable(GL_DEPTH_TEST);													//启用深度测试
 	glDepthFunc(GL_LEQUAL);														//所作深度测试的类型
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);							//告诉系统对透视进行修正
-	this->LoadTexture();
+
 	glEnable(GL_TEXTURE_2D);
+	this->LoadTexture();
 }
 
 
@@ -82,6 +86,8 @@ void BallancepathOpenglWidget::initializeGL()
  */
 void BallancepathOpenglWidget::resizeGL(int w, int h)
 {
+//	qDebug() << "BallancepathOpenglWidget::resizeGL";
+
 	glViewport(0, 0, (GLint)w, (GLint)h);										//重置当前的视口
 	glMatrixMode(GL_PROJECTION);												//选择投影矩阵
 	glLoadIdentity();															//重置投影矩阵
@@ -100,7 +106,7 @@ void BallancepathOpenglWidget::resizeGL(int w, int h)
 #define COORDINATELENGTH 100
 void BallancepathOpenglWidget::paintGL()
 {
-//	qDebug() << "BallancepathOpenglWidget::paintGL: ";
+//	qDebug() << "BallancepathOpenglWidget::paintGL";
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);							//清除屏幕和深度缓存
 	glMatrixMode(GL_MODELVIEW);
@@ -127,6 +133,9 @@ void BallancepathOpenglWidget::paintGL()
 	matrix.rotate(m_qtnBall);													//设置球体旋转度
 	glLoadMatrixf(matrix.data());
 	this->PaintBall();
+
+	//开启定时器
+	m_nTmrMoveEverything = this->startTimer(30);
 }
 
 
@@ -141,13 +150,15 @@ void BallancepathOpenglWidget::paintGL()
  */
 bool BallancepathOpenglWidget::event(QEvent *event)
 {
+//	qDebug() << "BallancepathOpenglWidget::event";
+
 	if (event->type() == QEvent::KeyPress)
 	{
 		int keyid = static_cast<QKeyEvent *>(event)->key();
 		//以下键盘消息本widget将忽略，由父widget处理
 		if (keyid == Qt::Key_F11 || keyid == Qt::Key_Escape)
 		{
-//			qDebug() << "BallancepathOpenglWidget::event: " << "ignored: " << "Key_F11 || Key_Escape";
+//			qDebug() << "BallancepathOpenglWidget::event" << "ignored" << "Key_F11 || Key_Escape";
 			return false;
 		}
 	}
@@ -164,6 +175,8 @@ bool BallancepathOpenglWidget::event(QEvent *event)
  */
 void BallancepathOpenglWidget::timerEvent(QTimerEvent *event)
 {
+//	qDebug() << "BallancepathOpenglWidget::timerEvent";
+
 	if (event->timerId() == m_nTmrMoveEverything)
 	{
 		this->MoveEverything();
@@ -179,6 +192,8 @@ void BallancepathOpenglWidget::timerEvent(QTimerEvent *event)
  */
 void BallancepathOpenglWidget::keyPressEvent(QKeyEvent *event)
 {
+//	qDebug() << "BallancepathOpenglWidget::keyPressEvent";
+
 	if (this->IsAutoRepeatKeyEvent(event))
 		return ;
 
@@ -187,7 +202,7 @@ void BallancepathOpenglWidget::keyPressEvent(QKeyEvent *event)
 	case Qt::Key_W:
 	case Qt::Key_Up:
 	{
-//		qDebug() << "BallancepathOpenglWidget::keyPressEvent: " << "Key_Up-ax";
+//		qDebug() << "BallancepathOpenglWidget::keyPressEvent" << "Key_Up-ax";
 
 		m_bPressBnW = true;
 		break;
@@ -195,7 +210,7 @@ void BallancepathOpenglWidget::keyPressEvent(QKeyEvent *event)
 	case Qt::Key_S:
 	case Qt::Key_Down:
 	{
-//		qDebug() << "BallancepathOpenglWidget::keyPressEvent: " << "Key_Down+ax";
+//		qDebug() << "BallancepathOpenglWidget::keyPressEvent" << "Key_Down+ax";
 
 		m_bPressBnS = true;
 		break;
@@ -203,7 +218,7 @@ void BallancepathOpenglWidget::keyPressEvent(QKeyEvent *event)
 	case Qt::Key_A:
 	case Qt::Key_Left:
 	{
-//		qDebug() << "BallancepathOpenglWidget::keyPressEvent: " << "Key_Left-ay";
+//		qDebug() << "BallancepathOpenglWidget::keyPressEvent" << "Key_Left-ay";
 
 		m_bPressBnA = true;
 		break;
@@ -211,27 +226,27 @@ void BallancepathOpenglWidget::keyPressEvent(QKeyEvent *event)
 	case Qt::Key_D:
 	case Qt::Key_Right:
 	{
-//		qDebug() << "BallancepathOpenglWidget::keyPressEvent: " << "Key_Right+ay";
+//		qDebug() << "BallancepathOpenglWidget::keyPressEvent" << "Key_Right+ay";
 
 		m_bPressBnD = true;
 		break;
 	}
 	case Qt::Key_PageUp:
 	{
-//		qDebug() << "BallancepathOpenglWidget::keyPressEvent: " << "Key_PageUp";
+//		qDebug() << "BallancepathOpenglWidget::keyPressEvent" << "Key_PageUp";
 
 		break;
 	}
 	case Qt::Key_PageDown:
 	{
-//		qDebug() << "BallancepathOpenglWidget::keyPressEvent: " << "Key_PageDown";
+//		qDebug() << "BallancepathOpenglWidget::keyPressEvent" << "Key_PageDown";
 
 		break;
 	}
 	case Qt::Key_Pause:
 	case Qt::Key_P:
 	{
-//		qDebug() << "BallancepathOpenglWidget::keyPressEvent: " << "Key_Pause || Key_P";
+//		qDebug() << "BallancepathOpenglWidget::keyPressEvent" << "Key_Pause || Key_P";
 		break;
 	}
 	default: break;
@@ -247,6 +262,8 @@ void BallancepathOpenglWidget::keyPressEvent(QKeyEvent *event)
  */
 void BallancepathOpenglWidget::keyReleaseEvent(QKeyEvent *event)
 {
+//	qDebug() << "BallancepathOpenglWidget::keyReleaseEvent";
+
 	if (this->IsAutoRepeatKeyEvent(event))
 		return ;
 
@@ -255,7 +272,7 @@ void BallancepathOpenglWidget::keyReleaseEvent(QKeyEvent *event)
 	case Qt::Key_W:
 	case Qt::Key_Up:
 	{
-//		qDebug() << "BallancepathOpenglWidget::keyReleaseEvent: " << "Key_Up-ax";
+//		qDebug() << "BallancepathOpenglWidget::keyReleaseEvent" << "Key_Up-ax";
 
 		m_bPressBnW = false;
 		break;
@@ -263,7 +280,7 @@ void BallancepathOpenglWidget::keyReleaseEvent(QKeyEvent *event)
 	case Qt::Key_S:
 	case Qt::Key_Down:
 	{
-//		qDebug() << "BallancepathOpenglWidget::keyReleaseEvent: " << "Key_Down+ax";
+//		qDebug() << "BallancepathOpenglWidget::keyReleaseEvent" << "Key_Down+ax";
 
 		m_bPressBnS = false;
 		break;
@@ -271,7 +288,7 @@ void BallancepathOpenglWidget::keyReleaseEvent(QKeyEvent *event)
 	case Qt::Key_A:
 	case Qt::Key_Left:
 	{
-//		qDebug() << "BallancepathOpenglWidget::keyReleaseEvent: " << "Key_Left-ay";
+//		qDebug() << "BallancepathOpenglWidget::keyReleaseEvent" << "Key_Left-ay";
 
 		m_bPressBnA = false;
 		break;
@@ -279,7 +296,7 @@ void BallancepathOpenglWidget::keyReleaseEvent(QKeyEvent *event)
 	case Qt::Key_D:
 	case Qt::Key_Right:
 	{
-//		qDebug() << "BallancepathOpenglWidget::keyReleaseEvent: " << "Key_Right+ay";
+//		qDebug() << "BallancepathOpenglWidget::keyReleaseEvent" << "Key_Right+ay";
 
 		m_bPressBnD = false;
 		break;
@@ -300,6 +317,8 @@ void BallancepathOpenglWidget::keyReleaseEvent(QKeyEvent *event)
  */
 bool BallancepathOpenglWidget::IsAutoRepeatKeyEvent(QKeyEvent *event)
 {
+//	qDebug() << "BallancepathOpenglWidget::IsAutoRepeatKeyEvent";
+
 	int keyid = event->key();
 	if ((event)->isAutoRepeat() &&
 		(keyid == Qt::Key_W || keyid == Qt::Key_Up ||
@@ -307,7 +326,7 @@ bool BallancepathOpenglWidget::IsAutoRepeatKeyEvent(QKeyEvent *event)
 		 keyid == Qt::Key_A || keyid == Qt::Key_Left ||
 		 keyid == Qt::Key_D || keyid == Qt::Key_Right))
 	{
-//		qDebug() << "BallancepathOpenglWidget::IsAutoRepeatKeyEvent: " << "ignored";
+//		qDebug() << "BallancepathOpenglWidget::IsAutoRepeatKeyEvent" << "ignored";
 		return true;
 	}
 	else
@@ -324,6 +343,8 @@ bool BallancepathOpenglWidget::IsAutoRepeatKeyEvent(QKeyEvent *event)
  */
 void BallancepathOpenglWidget::LoadTexture()
 {
+	qDebug() << "BallancepathOpenglWidget::LoadTexture";
+
 	QImage buf, tex;
 
 	buf.load(":/bgimg/mmexport1502771182717.png");
@@ -387,46 +408,48 @@ void BallancepathOpenglWidget::LoadTexture()
  */
 void BallancepathOpenglWidget::PaintCoordinate()
 {
+//	qDebug() << "BallancepathOpenglWidget::PaintCoordinate";
+
 	glBindTexture(GL_TEXTURE_2D, m_punTexture[0]);
-//	glLineWidth(3);
-//	glBegin(GL_LINES);
-//	glColor3f(1.0, 0.0, 0.0);
-//	glVertex3f(-COORDINATELENGTH, 0, 0);
-//	glColor3f(0.0, 1.0, 1.0);
-//	glVertex3f(COORDINATELENGTH, 0, 0);
-//	glColor3f(0.0, 1.0, 0.0);
-//	glVertex3f(0, -COORDINATELENGTH, 0);
-//	glColor3f(1.0, 0.0, 1.0);
-//	glVertex3f(0, COORDINATELENGTH, 0);
-//	glEnd();
-//	glLineWidth(1);
-//	glBegin(GL_LINES);
-//	for (int i = -COORDINATELENGTH; i <= COORDINATELENGTH; ++i)
-//	{
-//		if (i == 0)
-//			continue;
-//		glColor3f(0.0, 0.0, 1.0);
-//		glVertex3f(-COORDINATELENGTH, i, 0);
-//		glColor3f(1.0, 1.0, 0.0);
-//		glVertex3f(COORDINATELENGTH, i, 0);
-//		glColor3f(0.0, 0.0, 1.0);
-//		glVertex3f(i, -COORDINATELENGTH, 0);
-//		glColor3f(1.0, 1.0, 0.0);
-//		glVertex3f(i, COORDINATELENGTH, 0);
-//	}
-//	glEnd();
-//	glColor3f(1.0, 1.0, 1.0);
-//	glPointSize(5);
-//	glBegin(GL_POINTS);
-//	for (int i = -COORDINATELENGTH; i <= COORDINATELENGTH; i += 10)
-//	{
-//		for (int j = -COORDINATELENGTH; j <= COORDINATELENGTH; j += 10)
-//		{
-//			glVertex3f(i, j, 0);
-//		}
-//	}
-//	glEnd();
-//	glPointSize(1);
+	glLineWidth(3);
+	glBegin(GL_LINES);
+	glColor3f(1.0, 0.0, 0.0);
+	glVertex3f(-COORDINATELENGTH, 0, 0);
+	glColor3f(0.0, 1.0, 1.0);
+	glVertex3f(COORDINATELENGTH, 0, 0);
+	glColor3f(0.0, 1.0, 0.0);
+	glVertex3f(0, -COORDINATELENGTH, 0);
+	glColor3f(1.0, 0.0, 1.0);
+	glVertex3f(0, COORDINATELENGTH, 0);
+	glEnd();
+	glLineWidth(1);
+	glBegin(GL_LINES);
+	for (int i = -COORDINATELENGTH; i <= COORDINATELENGTH; ++i)
+	{
+		if (i == 0)
+			continue;
+		glColor3f(0.0, 0.0, 1.0);
+		glVertex3f(-COORDINATELENGTH, i, 0);
+		glColor3f(1.0, 1.0, 0.0);
+		glVertex3f(COORDINATELENGTH, i, 0);
+		glColor3f(0.0, 0.0, 1.0);
+		glVertex3f(i, -COORDINATELENGTH, 0);
+		glColor3f(1.0, 1.0, 0.0);
+		glVertex3f(i, COORDINATELENGTH, 0);
+	}
+	glEnd();
+	glColor3f(1.0, 1.0, 1.0);
+	glPointSize(5);
+	glBegin(GL_POINTS);
+	for (int i = -COORDINATELENGTH; i <= COORDINATELENGTH; i += 10)
+	{
+		for (int j = -COORDINATELENGTH; j <= COORDINATELENGTH; j += 10)
+		{
+			glVertex3f(i, j, 0);
+		}
+	}
+	glEnd();
+	glPointSize(1);
 }
 
 
@@ -437,6 +460,8 @@ void BallancepathOpenglWidget::PaintCoordinate()
  */
 void BallancepathOpenglWidget::PaintPath()
 {
+//	qDebug() << "BallancepathOpenglWidget::PaintPath";
+
 	glBindTexture(GL_TEXTURE_2D, m_punTexture[0]);
 	glLineWidth(8);
 	for (int i = 0; i < m_ThePath->m_vctThepath.size(); i++)
@@ -456,6 +481,8 @@ void BallancepathOpenglWidget::PaintPath()
  */
 void BallancepathOpenglWidget::PaintBall()
 {
+//	qDebug() << "BallancepathOpenglWidget::PaintBall";
+
 	glBindTexture(GL_TEXTURE_2D, m_punTexture[6]);
 	GLUquadricObj *qobj = gluNewQuadric();
 	gluQuadricTexture(qobj, GL_TRUE);
@@ -470,12 +497,15 @@ void BallancepathOpenglWidget::PaintBall()
  */
 void BallancepathOpenglWidget::MoveEverything()
 {
+//	qDebug() << "BallancepathOpenglWidget::MoveEverything";
+
 	float fDeltaAngleX = (float)m_bPressBnD - (float)m_bPressBnA;
 	float fDeltaAngleY = (float)m_bPressBnW - (float)m_bPressBnS;
 	float fDeltaAngleZ = 0;
 
 	if (fDeltaAngleX != 0 || fDeltaAngleY != 0 || fDeltaAngleZ != 0)
 	{
+		this->killTimer(m_nTmrMoveEverything);
 		QVector3D delta;
 		float multiple = 1.0f * YLArcLenPerDegree * m_fBallSpeed;
 		if (YLAbs(fDeltaAngleX) + YLAbs(fDeltaAngleY) + YLAbs(fDeltaAngleZ) == 2)

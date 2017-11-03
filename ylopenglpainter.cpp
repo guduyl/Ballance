@@ -9,12 +9,16 @@
 
 YLOpenGLPainter::YLOpenGLPainter()
 {
+	qDebug() << "YLOpenGLPainter::YLOpenGLPainter";
+
 }
 
 
 
 YLOpenGLPainter::~YLOpenGLPainter()
 {
+	qDebug() << "YLOpenGLPainter::~YLOpenGLPainter";
+
 }
 
 
@@ -23,6 +27,8 @@ YLOpenGLPainter::~YLOpenGLPainter()
 
 void YLOpenGLPainter::ShowScreen1(const QQuaternion *quaternion, const GLuint *texture, QMatrix4x4 *eyematrix)
 {
+	qDebug() << "YLOpenGLPainter::ShowScreen1";
+
 	//屏幕上方
 	SetDrawAttr(QVector3D(-6*MMM, 4*MMM, -16*MMM), quaternion, &texture[1], eyematrix);
 	DrawTriangle();
@@ -41,6 +47,8 @@ void YLOpenGLPainter::ShowScreen1(const QQuaternion *quaternion, const GLuint *t
 
 void YLOpenGLPainter::ShowScreen2(const QQuaternion *quaternion, const GLuint *texture, QMatrix4x4 *eyematrix)
 {
+	qDebug() << "YLOpenGLPainter::ShowScreen2";
+
 	//屏幕上方
 	SetDrawAttr(QVector3D(-6*MMM, 4*MMM, -16*MMM), quaternion, &texture[1], eyematrix);
 	DrawOrb(2*MMM, 10, 10);
@@ -59,6 +67,8 @@ void YLOpenGLPainter::ShowScreen2(const QQuaternion *quaternion, const GLuint *t
 
 void YLOpenGLPainter::ShowScreen3(const QQuaternion *quaternion, const GLuint *texture, QMatrix4x4 *eyematrix)
 {
+	qDebug() << "YLOpenGLPainter::ShowScreen3";
+
 	//屏幕中央
 	SetDrawAttr(QVector3D(0, 0, -16*MMM), quaternion, &texture[0], eyematrix);
 //	glRotatef(-90, 1, 0, 0);
@@ -95,6 +105,8 @@ void YLOpenGLPainter::ShowScreen3(const QQuaternion *quaternion, const GLuint *t
 
 void YLOpenGLPainter::ShowScreen4(const QQuaternion *quaternion, const GLuint *texture, QMatrix4x4 *eyematrix)
 {
+	qDebug() << "YLOpenGLPainter::ShowScreen4";
+
 	//屏幕
 }
 
@@ -102,6 +114,8 @@ void YLOpenGLPainter::ShowScreen4(const QQuaternion *quaternion, const GLuint *t
 
 void YLOpenGLPainter::SetDrawAttr(const QVector3D &vector, const QQuaternion *quaternion, const GLuint *texture, QMatrix4x4 *eyematrix)
 {
+	qDebug() << "YLOpenGLPainter::SetDrawAttr";
+
 	glLoadIdentity();
 	QMatrix4x4 matrix;
 	matrix.setToIdentity();
@@ -123,6 +137,8 @@ void YLOpenGLPainter::SetDrawAttr(const QVector3D &vector, const QQuaternion *qu
  */
 void YLOpenGLPainter::DrawTriangle()
 {
+	qDebug() << "YLOpenGLPainter::DrawTriangle";
+
 	glBegin(GL_TRIANGLES);
 	glColor3f(1.0, 0.0, 0.0);
 	glTexCoord2f(0.5, 1.0);
@@ -144,6 +160,8 @@ void YLOpenGLPainter::DrawTriangle()
  */
 void YLOpenGLPainter::DrawSquare()
 {
+	qDebug() << "YLOpenGLPainter::DrawSquare";
+
 	glColor3f(1.0, 1.0, 0.0);
 	glBegin(GL_QUADS);
 	glTexCoord2f(0.0, 1.0);
@@ -165,6 +183,8 @@ void YLOpenGLPainter::DrawSquare()
  */
 void YLOpenGLPainter::DrawHexagon()
 {
+	qDebug() << "YLOpenGLPainter::DrawHexagon";
+
 	glBegin(GL_POLYGON);
 	glColor3f(1.0, 0.0, 0.0);
 	glTexCoord2f(0.289, 1.0);
@@ -195,6 +215,8 @@ void YLOpenGLPainter::DrawHexagon()
  */
 void YLOpenGLPainter::DrawpYramid()
 {
+	qDebug() << "YLOpenGLPainter::DrawpYramid";
+
 	glBegin(GL_TRIANGLES);
 	//前
 	glColor3f(1.0, 0.0, 0.0);
@@ -250,6 +272,8 @@ void YLOpenGLPainter::DrawpYramid()
  */
 void YLOpenGLPainter::DrawMagicCube()
 {
+	qDebug() << "YLOpenGLPainter::DrawMagicCube";
+
 	glBegin(GL_QUADS);
 	//上 红
 	glColor3f(1.0, 0.0, 0.0);
@@ -413,6 +437,8 @@ void YLOpenGLPainter::DrawMagicCube()
 #define PI 2.1415926f
 void YLOpenGLPainter::DrawOrb(double radius, int slices, int stacks)
 {
+	qDebug() << "YLOpenGLPainter::DrawOrb";
+
 //	glColor4f(1, 1, 1, 1);
 	GLUquadricObj *qobj = gluNewQuadric();
 	gluQuadricTexture(qobj, GL_TRUE);

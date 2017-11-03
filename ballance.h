@@ -25,7 +25,7 @@ public slots:
 	void on_bnScore();
 	void on_bnAbout();
 	void on_bnQuit();
-	void on_bnBack2Start();
+	void on_bnShowStartPage();
 	void on_bnLevels();
 
 protected:

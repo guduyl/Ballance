@@ -26,9 +26,6 @@ public:
 	CBallancePath();
 	~CBallancePath();
 
-//protected:
-	void initdata();
-
 //private:
 	class Thepath
 	{
@@ -42,11 +39,11 @@ public:
 		float posy2;
 		QSizeF *imagesize;
 
-		friend std::ostream &operator<< (std::ostream &os, Thepath &path)
+		friend std::ostream &operator<<(std::ostream &os, Thepath &path)
 		{
 			os << "CBallancePath::Thepath: \n" <<
-				  "\t mode" << hex << (unsigned int)path.mode <<
-				  "\t length" << dec <<path.length <<
+				  "\t mode" << std::hex << (unsigned int)path.mode << std::dec <<
+				  "\t length" << path.length <<
 				  "\t posx1" << path.posx1 <<
 				  "\t posy1" << path.posy1 <<
 				  "\t posx2" << path.posx2 <<
@@ -54,9 +51,30 @@ public:
 				  "\t imagesize" << path.imagesize;
 			return os;
 		}
+#ifdef YL_WIN32_QT
+		friend QDebug operator<<(QDebug qd, Thepath &path)
+		{
+			qd << "    mode" << hex << (unsigned int)path.mode <<
+				  "    length" << dec <<path.length <<
+				  "    posx1" << path.posx1 <<
+				  "    posy1" << path.posy1 <<
+				  "    posx2" << path.posx2 <<
+				  "    posy2" << path.posy2 <<
+				  "    imagesize" << path.imagesize->width() << path.imagesize->height();
+			return qd;
+		}
+#endif
 	};
+
+//protected:
+	void initdata();
+	void xxx(Thepath &preinitdatapathunit, YLTree4<Thepath>::NODE *pinitdatanode);
+	void zzz(Thepath &initdatapathunit, Thepath &preinitdatapathunit);
+
+
 	QVector<Thepath> m_vctThepath;
-	YLTree4<Thepath> m_tre4Thepath;
+
+	YLTree4<Thepath> *m_tre4Thepath;
 
 	QSizeF m_szBall;
 	QSizeF m_szStart;
