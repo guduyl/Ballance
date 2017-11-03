@@ -73,11 +73,18 @@
 
 ## 2017年11月3日 星期五
 
-项目进展
+1. 项目进展
 * `YLTree4`
 	+ 完成四叉树扩展（添加结点）、遍历等基本方法编写
 * `CBallancePath`
 	+ 使用四叉树计算地图
+
+2. Bug
+* `CBallancePath` ballancepath.cpp line 43
+	+ lambda函数作为类模板的方法的参数如何定义
+	```D:\myfile\VC++\Qt\Ballance\ballancepath.cpp:43: error: no matching function for call to 'YLTree4<CBallancePath::Thepath>::traversalPreorder(CBallancePath::CBallancePath()::<lambda(CBallancePath::Thepath&, YLTree4<CBallancePath::Thepath>::NODE*)>)'
+		});
+		^```
 
 
 
