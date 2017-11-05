@@ -3,47 +3,55 @@
 
 
 
+
+
 CBallancePath::CBallancePath() :
 	m_szBall(2, 2),
-	m_szStart(4, 4),
-	m_szStop(4, 4),
-	m_szWood3(3, 1),
-	m_szCross(3, 3)
+	m_szStart(5, 5),
+	m_szStop(5, 5),
+	m_szWood3(3, 1)
 {
 	qDebug() << "CBallancePath::CBallancePath";
 
-	m_vctThepath.push_back(Thepath{PATHTYPESTART | PATHDIRNULL,   0, 0, 0, 0, 0, &m_szStart});
-	m_vctThepath.push_back(Thepath{PATHTYPEWOOD3 |    PATHDIRN,  10, 0, 0, 0, 0, &m_szWood3});
-	m_vctThepath.push_back(Thepath{PATHTYPEWOOD3 |    PATHDIRW,  10, 0, 0, 0, 0, &m_szWood3});
-	m_vctThepath.push_back(Thepath{PATHTYPEWOOD3 |    PATHDIRS,  20, 0, 0, 0, 0, &m_szWood3});
-	m_vctThepath.push_back(Thepath{PATHTYPEWOOD3 |    PATHDIRE,  20, 0, 0, 0, 0, &m_szWood3});
-	m_vctThepath.push_back(Thepath{PATHTYPEWOOD3 |    PATHDIRN,  10, 0, 0, 0, 0, &m_szWood3});
-	m_vctThepath.push_back(Thepath{PATHTYPESTOP  | PATHDIRNULL,   0, 0, 0, 0, 0,  &m_szStop});
+	m_tre4Path = new YLTree4<PathUnit>(PathUnit{PATHTYPESTART | PATHDIRNULL,   0, 0, 0, 0, 0, &m_szStart});
+	YLTree4<PathUnit>::NODE *root = m_tre4Path->getNodeRoot();
 
-	this->initdata();
+//	m_tre4Path->pushN(root, PathUnit{PATHTYPEWOOD3 |    PATHDIRN,  10, 0, 0, 0, 0, &m_szWood3})
+//			->pushS(root, PathUnit{PATHTYPEWOOD3 |    PATHDIRS,  10, 0, 0, 0, 0, &m_szWood3})
+//			->pushW(root, PathUnit{PATHTYPEWOOD3 |    PATHDIRW,  10, 0, 0, 0, 0, &m_szWood3})
+//			->pushE(root, PathUnit{PATHTYPEWOOD3 |    PATHDIRE,  10, 0, 0, 0, 0, &m_szWood3});
+//	YLTree4<PathUnit>::NODE *rootn = m_tre4Path->getNodeN(root);
+//	YLTree4<PathUnit>::NODE *roots = m_tre4Path->getNodeS(root);
+//	YLTree4<PathUnit>::NODE *rootw = m_tre4Path->getNodeW(root);
+//	YLTree4<PathUnit>::NODE *roote = m_tre4Path->getNodeE(root);
+//	m_tre4Path
+////			->pushN(rootn, PathUnit{PATHTYPESTOP  | PATHDIRNULL,  5, 0, 0, 0, 0, &m_szStop});
+//			->pushW(rootn, PathUnit{PATHTYPEWOOD3 |    PATHDIRW,  5, 0, 0, 0, 0, &m_szWood3})
+//			->pushE(rootn, PathUnit{PATHTYPEWOOD3 |    PATHDIRE,  5, 0, 0, 0, 0, &m_szWood3});
+//	m_tre4Path
+////			->pushS(roots, PathUnit{PATHTYPESTOP  | PATHDIRNULL,  5, 0, 0, 0, 0, &m_szStop});
+//			->pushW(roots, PathUnit{PATHTYPEWOOD3 |    PATHDIRW,  5, 0, 0, 0, 0, &m_szWood3})
+//			->pushE(roots, PathUnit{PATHTYPEWOOD3 |    PATHDIRE,  5, 0, 0, 0, 0, &m_szWood3});
+//	m_tre4Path
+////			->pushW(rootw, PathUnit{PATHTYPESTOP  | PATHDIRNULL,  5, 0, 0, 0, 0, &m_szStop});
+//			->pushN(rootw, PathUnit{PATHTYPEWOOD3 |    PATHDIRN,  5, 0, 0, 0, 0, &m_szWood3})
+//			->pushS(rootw, PathUnit{PATHTYPEWOOD3 |    PATHDIRS,  5, 0, 0, 0, 0, &m_szWood3});
+//	m_tre4Path
+////			->pushE(roote, PathUnit{PATHTYPESTOP  | PATHDIRNULL,  5, 0, 0, 0, 0, &m_szStop});
+//			->pushN(roote, PathUnit{PATHTYPEWOOD3 |    PATHDIRN,  5, 0, 0, 0, 0, &m_szWood3})
+//			->pushS(roote, PathUnit{PATHTYPEWOOD3 |    PATHDIRS,  5, 0, 0, 0, 0, &m_szWood3});
 
-//	qDebug() << "m_vctThepath";
-//	foreach(Thepath p, m_vctThepath)
-//		qDebug() << p;
+	root = m_tre4Path->pushNl(root, PathUnit{PATHTYPEWOOD3 |    PATHDIRN,  10, 0, 0, 0, 0, &m_szWood3});
+	root = m_tre4Path->pushWl(root, PathUnit{PATHTYPEWOOD3 |    PATHDIRW,  10, 0, 0, 0, 0, &m_szWood3});
+	root = m_tre4Path->pushSl(root, PathUnit{PATHTYPEWOOD3 |    PATHDIRS,  20, 0, 0, 0, 0, &m_szWood3});
+	root = m_tre4Path->pushEl(root, PathUnit{PATHTYPEWOOD3 |    PATHDIRE,  20, 0, 0, 0, 0, &m_szWood3});
+	root = m_tre4Path->pushNl(root, PathUnit{PATHTYPEWOOD3 |    PATHDIRN,  10, 0, 0, 0, 0, &m_szWood3});
+	root = m_tre4Path->pushNl(root, PathUnit{PATHTYPESTOP  | PATHDIRNULL,   0, 0, 0, 0, 0,  &m_szStop});
 
-	m_tre4Thepath = new YLTree4<Thepath>(Thepath{PATHTYPESTART | PATHDIRNULL,   0, 0, 0, 0, 0, &m_szStart});
-	YLTree4<Thepath>::NODE *p = m_tre4Thepath->getNodeRoot();
-	p = m_tre4Thepath->pushNl(p, Thepath{PATHTYPEWOOD3 |    PATHDIRN,  10, 0, 0, 0, 0, &m_szWood3});
-	p = m_tre4Thepath->pushWl(p, Thepath{PATHTYPEWOOD3 |    PATHDIRW,  10, 0, 0, 0, 0, &m_szWood3});
-	p = m_tre4Thepath->pushSl(p, Thepath{PATHTYPEWOOD3 |    PATHDIRS,  20, 0, 0, 0, 0, &m_szWood3});
-	p = m_tre4Thepath->pushEl(p, Thepath{PATHTYPEWOOD3 |    PATHDIRE,  20, 0, 0, 0, 0, &m_szWood3});
-	p = m_tre4Thepath->pushNl(p, Thepath{PATHTYPEWOOD3 |    PATHDIRN,  10, 0, 0, 0, 0, &m_szWood3});
-	p = m_tre4Thepath->pushNl(p, Thepath{PATHTYPESTOP  | PATHDIRNULL,   0, 0, 0, 0, 0,  &m_szStop});
+	this->InitData();
 
-	qDebug() << "m_tre4Thepath&";
-	int i = 0;
-	m_tre4Thepath->traversalPreorder([&](Thepath &path, YLTree4<Thepath>::NODE *n)
-	{
-		qDebug() << ++i << path;
-	});
-
-	qDebug() << "m_tre4Thepath";
-	m_tre4Thepath->traversalPreorder([&](Thepath &path, YLTree4<Thepath>::NODE *n)
+	qDebug() << "m_tre4Path";
+	m_tre4Path->traversalPreorder([&](PathUnit &path, YLTree4<PathUnit>::NODE *n)
 	{
 		qDebug() << path;
 	});
@@ -62,24 +70,24 @@ CBallancePath::CBallancePath() :
 //	n = t->getNodeE(t->getNodeRoot());
 //	t->pushS(n, 42)->pushE(n, 44);
 //	qDebug() << "先序遍历";
-//	t->traversalPreorder([](int &x)
+//	t->traversalPreorder([](int &x, YLTree4<int>::NODE *n)
 //	{
 //		qDebug() << x;
 //		x = x + 2;
 //	});
 //	t->getDataRoot() = 111;
 //	qDebug() << "先序遍历";
-//	t->traversalPreorder([](int &x)
+//	t->traversalPreorder([](int &x, YLTree4<int>::NODE *n)
 //	{
 //		qDebug() << x;
 //	});
 //	qDebug() << "中序遍历";
-//	t->traversalInorder([](int &x)
+//	t->traversalInorder([](int &x, YLTree4<int>::NODE *n)
 //	{
 //		qDebug() << x;
 //	});
 //	qDebug() << "后序遍历";
-//	t->traversalPostorder([](int &x)
+//	t->traversalPostorder([](int &x, YLTree4<int>::NODE *n)
 //	{
 //		qDebug() << x;
 //	});
@@ -94,172 +102,202 @@ CBallancePath::~CBallancePath()
 {
 	qDebug() << "CBallancePath::~CBallancePath";
 
-	m_vctThepath.clear();
-	m_tre4Thepath->clear();
-	delete m_tre4Thepath;
+	m_tre4Path->clear();
+	delete m_tre4Path;
 }
 
 
 
-void CBallancePath::initdata()
+void CBallancePath::InitData()
 {
 	qDebug() << "CBallancePath::initdata";
 
-//	m_tre4Thepath->traversalPreorder([&](Thepath &initdatapathunit, YLTree4<Thepath>::NODE *pinitdatanode)
-//	{
-//		Thepath preinitdatapathunit = m_tre4Thepath->getNodeParent(pinitdatanode)->nodeData;
-//		this->zzz(initdatapathunit, preinitdatapathunit);
-//	});
-
-//	m_tre4Thepath->traversalPreorder([](Thepath &initdatapathunit, YLTree4<Thepath>::NODE *pinitdatanode)
-//	{
-//		Thepath preinitdatapathunit = m_tre4Thepath->getNodeParent(pinitdatanode)->nodeData;
-//		this->zzz(initdatapathunit, preinitdatapathunit);
-//	});
+	m_tre4Path->traversalPreorder([&](PathUnit &initpathunit, YLTree4<PathUnit>::NODE *pnode)
+	{
+		PathUnit preinitpathunit = m_tre4Path->getNodeParent(pnode)->nodeData;
+		switch (initpathunit.mode & PATHTYPE)
+		{
+		case PATHTYPESTART :
+		{
+			initpathunit.posx1 = -initpathunit.imagesize->width() / 2;
+			initpathunit.posy1 = initpathunit.imagesize->height() / 2;
+			initpathunit.posx2 = initpathunit.imagesize->width() / 2;
+			initpathunit.posy2 = -initpathunit.imagesize->height() / 2;
+			break;
+		}
+		case PATHTYPEWOOD3 :
+		{
+			int temptype = preinitpathunit.mode & PATHTYPE;
+			int tempdir = preinitpathunit.mode & PATHDIR;
+			switch (initpathunit.mode & PATHDIR)
+			{
+			case PATHDIRN :
+			{
+				if (temptype == PATHTYPESTART)
+				{
+					initpathunit.posx1 = -initpathunit.imagesize->width() / 2;
+					initpathunit.posy1 = preinitpathunit.posy1 + initpathunit.imagesize->height() * initpathunit.length;
+					initpathunit.posx2 = initpathunit.imagesize->width() / 2;
+					initpathunit.posy2 = preinitpathunit.posy1;
+				}
+				else if (tempdir == PATHDIRN)
+				{
+				}
+				else if (tempdir == PATHDIRS)
+				{
+				}
+				else if (tempdir == PATHDIRW)
+				{
+					initpathunit.posx1 = preinitpathunit.posx1;
+					initpathunit.posy1 = preinitpathunit.posy1 + initpathunit.imagesize->height() * initpathunit.length;
+					initpathunit.posx2 = preinitpathunit.posx1 + initpathunit.imagesize->width();
+					initpathunit.posy2 = preinitpathunit.posy1;
+				}
+				else if (tempdir == PATHDIRE)
+				{
+					initpathunit.posx1 = preinitpathunit.posx2 - initpathunit.imagesize->width();
+					initpathunit.posy1 = preinitpathunit.posy1 + initpathunit.imagesize->height() * initpathunit.length;
+					initpathunit.posx2 = preinitpathunit.posx2;
+					initpathunit.posy2 = preinitpathunit.posy1;
+				}
+				break;
+			}
+			case PATHDIRS :
+			{
+				if (temptype == PATHTYPESTART)
+				{
+					initpathunit.posx1 = -initpathunit.imagesize->width() / 2;
+					initpathunit.posy1 = preinitpathunit.posy2;
+					initpathunit.posx2 = initpathunit.imagesize->width() / 2;
+					initpathunit.posy2 = preinitpathunit.posy2 - initpathunit.imagesize->height() * initpathunit.length;
+				}
+				else if (tempdir == PATHDIRN)
+				{
+				}
+				else if (tempdir == PATHDIRS)
+				{
+				}
+				else if (tempdir == PATHDIRW)
+				{
+					initpathunit.posx1 = preinitpathunit.posx1;
+					initpathunit.posy1 = preinitpathunit.posy2;
+					initpathunit.posx2 = preinitpathunit.posx1 + initpathunit.imagesize->width();
+					initpathunit.posy2 = preinitpathunit.posy2 - initpathunit.imagesize->height() * initpathunit.length;
+				}
+				else if (tempdir == PATHDIRE)
+				{
+					initpathunit.posx1 = preinitpathunit.posx2 - initpathunit.imagesize->width();
+					initpathunit.posy1 = preinitpathunit.posy2;
+					initpathunit.posx2 = preinitpathunit.posx2;
+					initpathunit.posy2 = preinitpathunit.posy2 - initpathunit.imagesize->height() * initpathunit.length;
+				}
+				break;
+			}
+			case PATHDIRW :
+			{
+				if (temptype == PATHTYPESTART)
+				{
+					initpathunit.posx1 = preinitpathunit.posx1 - initpathunit.imagesize->height() * initpathunit.length;
+					initpathunit.posy1 = initpathunit.imagesize->width() / 2;
+					initpathunit.posx2 = preinitpathunit.posx1;
+					initpathunit.posy2 = -initpathunit.imagesize->width() / 2;
+				}
+				else if (tempdir == PATHDIRN)
+				{
+					initpathunit.posx1 = preinitpathunit.posx1 - initpathunit.imagesize->height() * initpathunit.length;
+					initpathunit.posy1 = preinitpathunit.posy1;
+					initpathunit.posx2 = preinitpathunit.posx1;
+					initpathunit.posy2 = preinitpathunit.posy1 - initpathunit.imagesize->width();
+				}
+				else if (tempdir == PATHDIRS)
+				{
+					initpathunit.posx1 = preinitpathunit.posx1 - initpathunit.imagesize->height() * initpathunit.length;
+					initpathunit.posy1 = preinitpathunit.posy2 + initpathunit.imagesize->width();
+					initpathunit.posx2 = preinitpathunit.posx1;
+					initpathunit.posy2 = preinitpathunit.posy2;
+				}
+				else if (tempdir == PATHDIRW)
+				{
+				}
+				else if (tempdir == PATHDIRE)
+				{
+				}
+				break;
+			}
+			case PATHDIRE :
+			{
+				if (temptype == PATHTYPESTART)
+				{
+					initpathunit.posx1 = preinitpathunit.posx2;
+					initpathunit.posy1 = initpathunit.imagesize->width() / 2;
+					initpathunit.posx2 = preinitpathunit.posx2 + initpathunit.imagesize->height() * initpathunit.length;
+					initpathunit.posy2 = -initpathunit.imagesize->width() / 2;
+				}
+				else if (tempdir == PATHDIRN)
+				{
+					initpathunit.posx1 = preinitpathunit.posx2;
+					initpathunit.posy1 = preinitpathunit.posy1;
+					initpathunit.posx2 = preinitpathunit.posx2 + initpathunit.imagesize->height() * initpathunit.length;
+					initpathunit.posy2 = preinitpathunit.posy1 - initpathunit.imagesize->width();
+				}
+				else if (tempdir == PATHDIRS)
+				{
+					initpathunit.posx1 = preinitpathunit.posx2;
+					initpathunit.posy1 = preinitpathunit.posy2 + initpathunit.imagesize->width();
+					initpathunit.posx2 = preinitpathunit.posx2 + initpathunit.imagesize->height() * initpathunit.length;
+					initpathunit.posy2 = preinitpathunit.posy2;
+				}
+				else if (tempdir == PATHDIRW)
+				{
+				}
+				else if (tempdir == PATHDIRE)
+				{
+				}
+				break;
+			}
+			}
+			break;
+		}
+		case PATHTYPESTOP :
+		{
+			switch (preinitpathunit.mode & PATHDIR)
+			{
+			case PATHDIRN :
+			{
+				initpathunit.posx1 = preinitpathunit.posx1 - ((initpathunit.imagesize->width() - preinitpathunit.imagesize->width()) / 2);
+				initpathunit.posy1 = preinitpathunit.posy1 + initpathunit.imagesize->height();
+				break;
+			}
+			case PATHDIRS :
+			{
+				initpathunit.posx1 = preinitpathunit.posx1 - ((initpathunit.imagesize->width() - preinitpathunit.imagesize->width()) / 2);
+				initpathunit.posy1 = preinitpathunit.posy2;
+				break;
+			}
+			case PATHDIRW :
+			{
+				initpathunit.posx1 = preinitpathunit.posx1 - initpathunit.imagesize->width();
+				initpathunit.posy1 = preinitpathunit.posy1 + ((initpathunit.imagesize->height() - preinitpathunit.imagesize->width()) / 2);
+				break;
+			}
+			case PATHDIRE :
+			{
+				initpathunit.posx1 = preinitpathunit.posx2;
+				initpathunit.posy1 = preinitpathunit.posy1 + ((initpathunit.imagesize->height() - preinitpathunit.imagesize->width()) / 2);
+				break;
+			}
+			}
+			initpathunit.posx2 = initpathunit.posx1 + initpathunit.imagesize->width();
+			initpathunit.posy2 = initpathunit.posy1 - initpathunit.imagesize->height();
+			break;
+		}
+		}
+	});
 }
 
-void CBallancePath::xxx(Thepath &initdatapathunit, YLTree4<Thepath>::NODE *pinitdatanode)
-{
-	Thepath preinitdatapathunit = m_tre4Thepath->getNodeParent(pinitdatanode)->nodeData;
-	this->zzz(initdatapathunit, preinitdatapathunit);
-}
 
-void CBallancePath::zzz(Thepath &initdatapathunit, Thepath &preinitdatapathunit)
-{
-	switch (initdatapathunit.mode & PATHTYPE)
-	{
-	case PATHTYPESTART :
-	{
-		initdatapathunit.posx1 = -initdatapathunit.imagesize->width() / 2;
-		initdatapathunit.posy1 = -initdatapathunit.imagesize->height() / 2;
-		initdatapathunit.posx2 = initdatapathunit.imagesize->width() / 2;
-		initdatapathunit.posy2 = initdatapathunit.imagesize->height() / 2;
-		break;
-	}
-	case PATHTYPEWOOD3 :
-	{
-		int temptype = preinitdatapathunit.mode & PATHTYPE;
-		int tempdir = preinitdatapathunit.mode & PATHDIR;
-		switch (initdatapathunit.mode & PATHDIR)
-		{
-		case PATHDIRN :
-		{
-			if (temptype == PATHTYPESTART)
-			{
-				initdatapathunit.posx1 = -m_szCross.width() / 2;
-				initdatapathunit.posy1 = preinitdatapathunit.posy1 + preinitdatapathunit.imagesize->height();
-			}
-			else if (tempdir == PATHDIRW)
-			{
-				initdatapathunit.posx1 = preinitdatapathunit.posx1 + preinitdatapathunit.imagesize->height() * preinitdatapathunit.length;
-				initdatapathunit.posy1 = preinitdatapathunit.posy1 + m_szCross.height();
-			}
-			else if (tempdir == PATHDIRE)
-			{
-				initdatapathunit.posx1 = preinitdatapathunit.posx1 - m_szCross.width();
-				initdatapathunit.posy1 = preinitdatapathunit.posy1 + m_szCross.height();
-			}
-			initdatapathunit.posx2 = initdatapathunit.posx1 + initdatapathunit.imagesize->width();
-			initdatapathunit.posy2 = initdatapathunit.posy1 + initdatapathunit.imagesize->height() * initdatapathunit.length;
-			break;
-		}
-		case PATHDIRS :
-		{
-			initdatapathunit.posy1 = preinitdatapathunit.posy1 - initdatapathunit.imagesize->height() * initdatapathunit.length;
-			initdatapathunit.posy2 = preinitdatapathunit.posy1;
-			if (temptype == PATHTYPESTART)
-			{
-				initdatapathunit.posx1 = -m_szCross.width() / 2;
-			}
-			else if (tempdir == PATHDIRW)
-			{
-				initdatapathunit.posx1 = preinitdatapathunit.posx1 + preinitdatapathunit.imagesize->height() * preinitdatapathunit.length;
-			}
-			else if (tempdir == PATHDIRE)
-			{
-				initdatapathunit.posx1 = preinitdatapathunit.posx1 - m_szCross.width();
-			}
-			initdatapathunit.posx2 = initdatapathunit.posx1 + initdatapathunit.imagesize->width();
-			break;
-		}
-		case PATHDIRW :
-		{
-			if (temptype == PATHTYPESTART)
-			{
-				initdatapathunit.posx1 = preinitdatapathunit.posx1 + preinitdatapathunit.imagesize->width();
-				initdatapathunit.posy1 = -m_szCross.height() / 2;
-			}
-			else if (tempdir == PATHDIRN)
-			{
-				initdatapathunit.posx1 = preinitdatapathunit.posx1 + m_szCross.width();
-				initdatapathunit.posy1 = preinitdatapathunit.posy1 + preinitdatapathunit.imagesize->height() * preinitdatapathunit.length;
-			}
-			else if (tempdir == PATHDIRS)
-			{
-				initdatapathunit.posx1 = preinitdatapathunit.posx1 + m_szCross.width();
-				initdatapathunit.posy1 = preinitdatapathunit.posy1 - m_szCross.height();
-			}
-			initdatapathunit.posx2 = initdatapathunit.posx1 + initdatapathunit.imagesize->height() * initdatapathunit.length;
-			initdatapathunit.posy2 = initdatapathunit.posy1 + initdatapathunit.imagesize->width();
-			break;
-		}
-		case PATHDIRE :
-		{
-			initdatapathunit.posx1 = preinitdatapathunit.posx1 - initdatapathunit.imagesize->height() * initdatapathunit.length;
-			initdatapathunit.posx2 = preinitdatapathunit.posx1;
-			if (temptype == PATHTYPESTART)
-			{
-				initdatapathunit.posy1 = -m_szCross.height() / 2;
-			}
-			else if (tempdir == PATHDIRN)
-			{
-				initdatapathunit.posy1 = preinitdatapathunit.posy1 + preinitdatapathunit.imagesize->height() * preinitdatapathunit.length;
-			}
-			else if (tempdir == PATHDIRS)
-			{
-				initdatapathunit.posy1 = preinitdatapathunit.posy1 - m_szCross.height();
-			}
-			initdatapathunit.posy2 = initdatapathunit.posy1 + initdatapathunit.imagesize->width();
-			break;
-		}
-		}
-		break;
-	}
-	case PATHTYPESTOP :
-	{
-		switch (preinitdatapathunit.mode & PATHDIR)
-		{
-		case PATHDIRS :
-		{
-			initdatapathunit.posx1 = preinitdatapathunit.posx1 - ((initdatapathunit.imagesize->width() - m_szCross.width()) / 2);
-			initdatapathunit.posy1 = preinitdatapathunit.posy1 - initdatapathunit.imagesize->height();
-			break;
-		}
-		case PATHDIRN :
-		{
-			initdatapathunit.posx1 = preinitdatapathunit.posx1 - ((initdatapathunit.imagesize->width() - m_szCross.width()) / 2);
-			initdatapathunit.posy1 = preinitdatapathunit.posy1 + preinitdatapathunit.imagesize->height() * preinitdatapathunit.length;
-			break;
-		}
-		case PATHDIRE :
-		{
-			initdatapathunit.posx1 = preinitdatapathunit.posx1 - initdatapathunit.imagesize->width();
-			initdatapathunit.posy1 = preinitdatapathunit.posy1 - ((initdatapathunit.imagesize->height() - m_szCross.height()) / 2);
-			break;
-		}
-		case PATHDIRW :
-		{
-			initdatapathunit.posx1 = preinitdatapathunit.posx1 + preinitdatapathunit.imagesize->height() * preinitdatapathunit.length;
-			initdatapathunit.posy1 = preinitdatapathunit.posy1 - ((initdatapathunit.imagesize->height() - m_szCross.height()) / 2);
-			break;
-		}
-		}
-		initdatapathunit.posx2 = initdatapathunit.posx1 + initdatapathunit.imagesize->width();
-		initdatapathunit.posy2 = initdatapathunit.posy1 + initdatapathunit.imagesize->height();
-		break;
-	}
-	}
-}
+
+
 
 
 

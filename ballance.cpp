@@ -71,9 +71,9 @@ void Ballance::mySetLayout()
 //	this->move((desktop->width() - m_nWidth) / 2, (desktop->height() - m_nHeight - 100) / 2);
 	this->setWindowIcon(QIcon(":/icon/earth1.ico"));
 
-//	this->showFullScreen();
-//	m_nWidth = this->width();
-//	m_nHeight = this->height();
+	this->showFullScreen();
+	m_nWidth = this->width();
+	m_nHeight = this->height();
 
 	m_imgBg.load(":/bgimg/earth.jpg");
 

@@ -35,7 +35,7 @@ protected:
 
 private:
 	Ballance *m_parent;
-	CBallancePath *m_ThePath;
+	CBallancePath *m_Path;
 
 	GLuint *m_punTexture;														//贴图
 	QMatrix4x4 m_mtx4Eye;														//矩阵保存看点属性

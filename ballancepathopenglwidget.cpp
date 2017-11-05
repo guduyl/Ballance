@@ -11,7 +11,7 @@
 BallancepathOpenglWidget::BallancepathOpenglWidget(QWidget *parent) :
 	QGLWidget(parent),
 	m_parent((Ballance *)parent),
-	m_ThePath(new CBallancePath),
+	m_Path(new CBallancePath),
 
 	m_punTexture(new GLuint[10]),
 	m_mtx4Eye(),
@@ -31,9 +31,9 @@ BallancepathOpenglWidget::BallancepathOpenglWidget(QWidget *parent) :
 	QVector3D delta;
 	//调整看点
 	delta = QVector3D(0, -1, 0).normalized();
-	for (int i = 0; i < 12; i++)
+	for (int i = 0; i < 18; i++)
 		m_mtx4Eye.translate(delta);
-	m_mtx4Eye.rotate(36, 1, 0, 0);
+	m_mtx4Eye.rotate(45, 1, 0, 0);
 	//调整地图旋转度
 	delta = QVector3D(1, 0, 0).normalized();
 	m_qtnPath = QQuaternion::fromAxisAndAngle(delta, -90) * m_qtnPath;
@@ -51,7 +51,7 @@ BallancepathOpenglWidget::~BallancepathOpenglWidget()
 {
 	qDebug() << "BallancepathOpenglWidget::~BallancepathOpenglWidget";
 
-	delete m_ThePath;
+	delete m_Path;
 	delete[] m_punTexture;
 }
 
@@ -117,7 +117,7 @@ void BallancepathOpenglWidget::paintGL()
 
 	QMatrix4x4 matrix;
 	matrix.setToIdentity();
-	matrix.translate(QVector3D(0, 0, -16));
+	matrix.translate(QVector3D(0, 0, -24));
 	matrix = m_mtx4Eye * matrix;												//设置看点
 
 	//绘制坐标系
@@ -464,13 +464,11 @@ void BallancepathOpenglWidget::PaintPath()
 
 	glBindTexture(GL_TEXTURE_2D, m_punTexture[0]);
 	glLineWidth(8);
-	for (int i = 0; i < m_ThePath->m_vctThepath.size(); i++)
+	m_Path->foreachPathUnit([&](const CBallancePath::PathUnit &pu)
 	{
-		glRectf(m_ThePath->m_vctThepath[i].posx1,
-			m_ThePath->m_vctThepath[i].posy1,
-			m_ThePath->m_vctThepath[i].posx2,
-			m_ThePath->m_vctThepath[i].posy2);
-	}
+		glRectf(pu.posx1, pu.posy1, pu.posx2, pu.posy2);
+	});
+	glLineWidth(1);
 }
 
 

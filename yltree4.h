@@ -17,7 +17,7 @@
 /**
  * 四向树
  */
-template <typename T>
+template<typename T>
 class YLTree4
 {
 public:
@@ -150,33 +150,38 @@ public:
 	 */
 	void clear()
 	{
-//		qDebug() << "YLTree4::clear";
+		qDebug() << "YLTree4::clear";
 
-		NODE **nodestack = new NODE*[this->m_szDepth];
-		int *indexnodestack = new int[this->m_szDepth];
-		int index = 0;
-
-		nodestack[index] = this->m_root;
-		indexnodestack[index] = 3;
-
-		NODE *p = NULL;
-		while (index >= 0)
+		this->traversalPostorder([&](T &t, NODE *n)
 		{
-			if (indexnodestack[index] == -1)
-			{
-				delete nodestack[index];
-				--index;
-				continue;
-			}
-			p = *(&(nodestack[index]->nodeN) + indexnodestack[index]);
-			--indexnodestack[index];
-			if (p == this->m_end)
-			{
-				continue;
-			}
-			nodestack[++index] = p;
-			indexnodestack[index] = 3;
-		}
+			delete n;
+		});
+
+//		NODE **nodestack = new NODE*[this->m_szDepth];
+//		size_t *indexnodestack = new size_t[this->m_szDepth];
+//		int index = 0;
+
+//		nodestack[index] = this->m_root;
+//		indexnodestack[index] = 3;
+
+//		NODE *p = NULL;
+//		while (index >= 0)
+//		{
+//			if (indexnodestack[index] == -1)
+//			{
+//				delete nodestack[index];
+//				--index;
+//				continue;
+//			}
+//			p = *(&(nodestack[index]->nodeN) + indexnodestack[index]);
+//			--indexnodestack[index];
+//			if (p == this->m_end)
+//			{
+//				continue;
+//			}
+//			nodestack[++index] = p;
+//			indexnodestack[index] = 3;
+//		}
 
 		this->m_root = new NODE;
 		this->m_root->nodeParent = this->m_end;
@@ -509,42 +514,7 @@ public:
 	 * @brief traversalPreorder
 	 *		DLR 先序遍历
 	 */
-	void traversalPreorder(void (*func)(T &data))
-	{
-//		qDebug() << "YLTree4::preorderTraversal";
-
-		if (this->m_szAmount == 0)
-			return ;
-
-		NODE **nodestack = new NODE*[this->m_szDepth];
-		size_t *indexnodestack = new size_t[this->m_szDepth];
-		int index = 0;
-
-		func(this->m_root->nodeData);
-		nodestack[index] = this->m_root;
-		indexnodestack[index] = 0;
-
-		NODE *p = NULL;
-		while (index >= 0)
-		{
-			if (indexnodestack[index] == 4)
-			{
-				--index;
-				continue;
-			}
-			p = *(&(nodestack[index]->nodeN) + indexnodestack[index]);
-			++indexnodestack[index];
-			if (p == this->m_end)
-			{
-				continue;
-			}
-			func(p->nodeData);
-			nodestack[++index] = p;
-			indexnodestack[index] = 0;
-		}
-	}
-
-	void traversalPreorder(void (*func)(T &data, NODE *pnode))
+	template<typename Func> void traversalPreorder(Func func)
 	{
 //		qDebug() << "YLTree4::preorderTraversal";
 
@@ -585,7 +555,7 @@ public:
 	 * @brief traversalInorder
 	 *		LDR 中序遍历
 	 */
-	void traversalInorder(void (*func)(T &data))
+	template<typename Func> void traversalInorder(Func func)
 	{
 //		qDebug() << "YLTree4::inorderTraversal";
 
@@ -604,41 +574,7 @@ public:
 		{
 			if (indexnodestack[index] == 4)
 			{
-				func(nodestack[index]->nodeData);
-				--index;
-				continue;
-			}
-			p = *(&(nodestack[index]->nodeN) + indexnodestack[index]);
-			++indexnodestack[index];
-			if (p == this->m_end)
-			{
-				continue;
-			}
-			nodestack[++index] = p;
-			indexnodestack[index] = 0;
-		}
-	}
-
-	void traversalInorder(void (*func)(T &data, NODE *pnode))
-	{
-//		qDebug() << "YLTree4::inorderTraversal";
-
-		if (this->m_szAmount == 0)
-			return ;
-
-		NODE **nodestack = new NODE*[this->m_szDepth];
-		size_t *indexnodestack = new size_t[this->m_szDepth];
-		int index = 0;
-
-		nodestack[index] = this->m_root;
-		indexnodestack[index] = 0;
-
-		NODE *p = NULL;
-		while (index >= 0)
-		{
-			if (indexnodestack[index] == 4)
-			{
-				func(nodestack[index]->nodeData);
+				func(nodestack[index]->nodeData, nodestack[index]);
 				--index;
 				continue;
 			}
@@ -659,7 +595,7 @@ public:
 	 * @brief traversalPostorder
 	 *		LRD 后序遍历
 	 */
-	void traversalPostorder(void (*func)(T &data))
+	template<typename Func> void traversalPostorder(Func func)
 	{
 //		qDebug() << "YLTree4::postorderTraversal";
 
@@ -671,52 +607,18 @@ public:
 		int index = 0;
 
 		nodestack[index] = this->m_root;
-		indexnodestack[index] = 3;
+		indexnodestack[index] = 4;
 
 		NODE *p = NULL;
 		while (index >= 0)
 		{
-			if (indexnodestack[index] == -1)
+			if (indexnodestack[index] == 0)
 			{
-				func(nodestack[index]->nodeData);
+				func(nodestack[index]->nodeData, nodestack[index]);
 				--index;
 				continue;
 			}
-			p = *(&(nodestack[index]->nodeN) + indexnodestack[index]);
-			--indexnodestack[index];
-			if (p == this->m_end)
-			{
-				continue;
-			}
-			nodestack[++index] = p;
-			indexnodestack[index] = 3;
-		}
-	}
-
-	void traversalPostorder(void (*func)(T &data, NODE *pnode))
-	{
-//		qDebug() << "YLTree4::postorderTraversal";
-
-		if (this->m_szAmount == 0)
-			return ;
-
-		NODE **nodestack = new NODE*[this->m_szDepth];
-		size_t *indexnodestack = new size_t[this->m_szDepth];
-		int index = 0;
-
-		nodestack[index] = this->m_root;
-		indexnodestack[index] = 3;
-
-		NODE *p = NULL;
-		while (index >= 0)
-		{
-			if (indexnodestack[index] == -1)
-			{
-				func(nodestack[index]->nodeData);
-				--index;
-				continue;
-			}
-			p = *(&(nodestack[index]->nodeN) + indexnodestack[index]);
+			p = *(&(nodestack[index]->nodeN) + indexnodestack[index] - 1);
 			--indexnodestack[index];
 			if (p == this->m_end)
 			{
@@ -749,40 +651,8 @@ public:
 
 
 
-//template<typename T, typename Function> void traversalPreorder(YLTree4<T> *tree, T data, YLTree4<T>::NODE *pnode, Function func)
-//{
-////	qDebug() << "template::preorderTraversal";
 
-//	if (tree->m_szAmount == 0)
-//		return ;
 
-//	YLTree4<T>::NODE **nodestack = new YLTree4<T>::NODE*[tree->m_szDepth];
-//	size_t *indexnodestack = new size_t[tree->m_szDepth];
-//	int index = 0;
-
-//	func(tree->m_root->nodeData, tree->m_root);
-//	nodestack[index] = tree->m_root;
-//	indexnodestack[index] = 0;
-
-//	YLTree4<T>::NODE *p = NULL;
-//	while (index >= 0)
-//	{
-//		if (indexnodestack[index] == 4)
-//		{
-//			--index;
-//			continue;
-//		}
-//		p = *(&(nodestack[index]->nodeN) + indexnodestack[index]);
-//		++indexnodestack[index];
-//		if (p == tree->m_end)
-//		{
-//			continue;
-//		}
-//		func(p->nodeData, p);
-//		nodestack[++index] = p;
-//		indexnodestack[index] = 0;
-//	}
-//}
 
 
 

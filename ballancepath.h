@@ -26,8 +26,7 @@ public:
 	CBallancePath();
 	~CBallancePath();
 
-//private:
-	class Thepath
+	class PathUnit
 	{
 	public:
 		unsigned char mode;				//高四位pathtype、低四位路径正方向
@@ -39,9 +38,9 @@ public:
 		float posy2;
 		QSizeF *imagesize;
 
-		friend std::ostream &operator<<(std::ostream &os, Thepath &path)
+		friend std::ostream &operator<<(std::ostream &os, PathUnit &path)
 		{
-			os << "CBallancePath::Thepath: \n" <<
+			os << "CBallancePath::PathUnit: \n" <<
 				  "\t mode" << std::hex << (unsigned int)path.mode << std::dec <<
 				  "\t length" << path.length <<
 				  "\t posx1" << path.posx1 <<
@@ -52,7 +51,7 @@ public:
 			return os;
 		}
 #ifdef YL_WIN32_QT
-		friend QDebug operator<<(QDebug qd, Thepath &path)
+		friend QDebug operator<<(QDebug qd, PathUnit &path)
 		{
 			qd << "    mode" << hex << (unsigned int)path.mode <<
 				  "    length" << dec <<path.length <<
@@ -66,21 +65,26 @@ public:
 #endif
 	};
 
-//protected:
-	void initdata();
-	void xxx(Thepath &preinitdatapathunit, YLTree4<Thepath>::NODE *pinitdatanode);
-	void zzz(Thepath &initdatapathunit, Thepath &preinitdatapathunit);
+	template<typename Func> void foreachPathUnit(Func func)
+	{
+		m_tre4Path->traversalPreorder([&](PathUnit &initdatapathunit, YLTree4<PathUnit>::NODE *pinitdatanode)
+		{
+			const PathUnit &pathunit = initdatapathunit;
+			func(pathunit);
+		});
+	}
 
+protected:
+	void InitData();
 
-	QVector<Thepath> m_vctThepath;
-
-	YLTree4<Thepath> *m_tre4Thepath;
+	YLTree4<PathUnit> *m_tre4Path;
 
 	QSizeF m_szBall;
 	QSizeF m_szStart;
 	QSizeF m_szStop;
 	QSizeF m_szWood3;
-	QSizeF m_szCross;
+
+private:
 
 };
 

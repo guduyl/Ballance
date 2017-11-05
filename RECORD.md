@@ -80,8 +80,23 @@
 	+ 使用四叉树计算地图
 
 ### 2. Bug
-* `CBallancePath` ballancepath.cpp line 43
+* `YLTree4` 遍历树的方法的参数
 	+ lambda函数作为类模板的方法的参数如何定义
+
+
+## 2017年11月4日 星期六
+
+
+## 2017年11月5日 星期日
+
+### 1. Bug解决
+* `YLTree4` 遍历树的方法的参数
+	+ 模板类中嵌套模板函数即可使lambda函数作为类模板的方法的参数
+
+### 2. 项目进展
+* `CBallancePath`
+	+ 完善map计算规则
+	+ 向`BallancepathOpenglWidget`绘图类提供接口
 
 
 
