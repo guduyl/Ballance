@@ -66,9 +66,9 @@ void Ballance::mySetLayout()
 	this->resize(m_nWidth, m_nHeight);
 	this->setFixedSize(m_nWidth, m_nHeight);
 	QDesktopWidget* desktop = QApplication::desktop();
-	this->move((desktop->width() - m_nWidth) / 2 + 700, (desktop->height() - m_nHeight - 100) / 2);
+//	this->move((desktop->width() - m_nWidth) / 2 + 700, (desktop->height() - m_nHeight - 100) / 2);
 //	this->move((desktop->width() - m_nWidth) / 2 + 500, (desktop->height() - m_nHeight - 100) / 2);
-//	this->move((desktop->width() - m_nWidth) / 2, (desktop->height() - m_nHeight - 100) / 2);
+	this->move((desktop->width() - m_nWidth) / 2, (desktop->height() - m_nHeight - 100) / 2);
 	this->setWindowIcon(QIcon(":/icon/earth1.ico"));
 
 	this->showFullScreen();
