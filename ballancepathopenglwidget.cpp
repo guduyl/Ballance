@@ -12,36 +12,15 @@ BallancepathOpenglWidget::BallancepathOpenglWidget(QWidget *parent) :
 	QGLWidget(parent),
 	m_parent((Ballance *)parent),
 	m_Path(new CBallancePath),
-
-	m_punTexture(new GLuint[10]),
-	m_mtx4Eye(),
-	m_qtnPath(),
-	m_vct4Ball(0, 0, 0),
-	m_qtnBall(),
-	m_fBallSpeed(15),
-
-	m_nTmrMoveEverything(0),
-	m_bPressBnW(false),
-	m_bPressBnS(false),
-	m_bPressBnA(false),
-	m_bPressBnD(false)
+	m_punTexture(new GLuint[10])
 {
 	qDebug() << "BallancepathOpenglWidget::BallancepathOpenglWidget";
 
-	QVector3D delta;
-	//调整看点
-	delta = QVector3D(0, -1, 0).normalized();
-	for (int i = 0; i < 18; i++)
-		m_mtx4Eye.translate(delta);
-	m_mtx4Eye.rotate(45, 1, 0, 0);
-	//调整地图旋转度
-	delta = QVector3D(1, 0, 0).normalized();
-	m_qtnPath = QQuaternion::fromAxisAndAngle(delta, -90) * m_qtnPath;
-	//调整球体旋转度使球表面显示合适的图案
-	delta = QVector3D(0, 0, 1).normalized();
-	m_qtnBall = QQuaternion::fromAxisAndAngle(delta, -90) * m_qtnBall;
-	//调整球体位置
-	m_vct4Ball += QVector3D(0, 0, 1);
+	m_pnlBall = new YLNaturalLaw(1, 10, 0.1);
+	m_pnlBall->setForce(10);
+	m_pnlBall->setMaxVelocity(10);
+
+	this->ResetGame();
 
 }
 
@@ -51,8 +30,11 @@ BallancepathOpenglWidget::~BallancepathOpenglWidget()
 {
 	qDebug() << "BallancepathOpenglWidget::~BallancepathOpenglWidget";
 
+	this->m_parent->setStatus(Ballance::GAMESTATUS_OVER);
+
 	delete m_Path;
 	delete[] m_punTexture;
+	delete m_pnlBall;
 }
 
 
@@ -123,19 +105,22 @@ void BallancepathOpenglWidget::paintGL()
 	//绘制坐标系
 	matrix.rotate(m_qtnPath);													//设置地图旋转度
 	glLoadMatrixf(matrix.data());
-	this->PaintCoordinate();
+//	this->PaintCoordinate();
 
 	//绘制地图
 	this->PaintPath();
 
 	//绘制球体
-	matrix.translate(m_vct4Ball);												//设置球体位置
+	matrix.translate(m_vct3Ball);												//设置球体位置
 	matrix.rotate(m_qtnBall);													//设置球体旋转度
 	glLoadMatrixf(matrix.data());
 	this->PaintBall();
 
 	//开启定时器
-	m_nTmrMoveEverything = this->startTimer(30);
+	if (this->m_parent->getStatus() == Ballance::GAMESTATUS_START)
+	{
+		m_nTmrMoveEverything = this->startTimer(30);
+	}
 }
 
 
@@ -160,6 +145,10 @@ bool BallancepathOpenglWidget::event(QEvent *event)
 		{
 //			qDebug() << "BallancepathOpenglWidget::event" << "ignored" << "Key_F11 || Key_Escape";
 			return false;
+		}
+		else if (this->m_parent->getStatus() != Ballance::GAMESTATUS_START)
+		{
+			return true;
 		}
 	}
 
@@ -347,7 +336,7 @@ void BallancepathOpenglWidget::LoadTexture()
 
 	QImage buf, tex;
 
-	buf.load(":/bgimg/mmexport1502771182717.png");
+	buf.load(":/bgimg/map.jpg");
 	tex = QGLWidget::convertToGLFormat(buf);
 	//创建一个纹理
 	glGenTextures(1, &m_punTexture[1]);
@@ -356,46 +345,6 @@ void BallancepathOpenglWidget::LoadTexture()
 	//真正的创建纹理
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, tex.width(), tex.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, tex.bits());
 	//滤波方式
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	buf.load(":/bgimg/mmexport1507349001837.png");
-	tex = QGLWidget::convertToGLFormat(buf);
-	glGenTextures(1, &m_punTexture[2]);
-	glBindTexture(GL_TEXTURE_2D, m_punTexture[2]);
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, tex.width(), tex.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, tex.bits());
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	buf.load(":/bgimg/mmexport1507349023277.png");
-	tex = QGLWidget::convertToGLFormat(buf);
-	glGenTextures(1, &m_punTexture[3]);
-	glBindTexture(GL_TEXTURE_2D, m_punTexture[3]);
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, tex.width(), tex.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, tex.bits());
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	buf.load(":/bgimg/mmexport1507349027215.png");
-	tex = QGLWidget::convertToGLFormat(buf);
-	glGenTextures(1, &m_punTexture[4]);
-	glBindTexture(GL_TEXTURE_2D, m_punTexture[4]);
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, tex.width(), tex.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, tex.bits());
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	buf.load(":/bgimg/mmexport1507349033771.png");
-	tex = QGLWidget::convertToGLFormat(buf);
-	glGenTextures(1, &m_punTexture[5]);
-	glBindTexture(GL_TEXTURE_2D, m_punTexture[5]);
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, tex.width(), tex.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, tex.bits());
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	buf.load(":/bgimg/map.jpg");
-	tex = QGLWidget::convertToGLFormat(buf);
-	glGenTextures(1, &m_punTexture[6]);
-	glBindTexture(GL_TEXTURE_2D, m_punTexture[6]);
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, tex.width(), tex.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, tex.bits());
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
@@ -464,11 +413,12 @@ void BallancepathOpenglWidget::PaintPath()
 
 	glBindTexture(GL_TEXTURE_2D, m_punTexture[0]);
 	glLineWidth(8);
-	m_Path->foreachPathUnit([&](const CBallancePath::PathUnit &pu)
+	int gameres = m_Path->foreachPathUnit(m_vct3Ball, [&](const CBallancePath::PathUnit &pu)
 	{
 		glRectf(pu.posx1, pu.posy1, pu.posx2, pu.posy2);
 	});
 	glLineWidth(1);
+	this->CheckGameStatus(gameres);
 }
 
 
@@ -481,7 +431,7 @@ void BallancepathOpenglWidget::PaintBall()
 {
 //	qDebug() << "BallancepathOpenglWidget::PaintBall";
 
-	glBindTexture(GL_TEXTURE_2D, m_punTexture[6]);
+	glBindTexture(GL_TEXTURE_2D, m_punTexture[1]);
 	GLUquadricObj *qobj = gluNewQuadric();
 	gluQuadricTexture(qobj, GL_TRUE);
 	gluSphere(qobj, 1, 30, 30);
@@ -497,26 +447,106 @@ void BallancepathOpenglWidget::MoveEverything()
 {
 //	qDebug() << "BallancepathOpenglWidget::MoveEverything";
 
+	this->killTimer(m_nTmrMoveEverything);
+
 	float fDeltaAngleX = (float)m_bPressBnD - (float)m_bPressBnA;
 	float fDeltaAngleY = (float)m_bPressBnW - (float)m_bPressBnS;
 	float fDeltaAngleZ = 0;
 
-	if (fDeltaAngleX != 0 || fDeltaAngleY != 0 || fDeltaAngleZ != 0)
-	{
-		this->killTimer(m_nTmrMoveEverything);
-		QVector3D delta;
-		float multiple = 1.0f * YLArcLenPerDegree * m_fBallSpeed;
-		if (YLAbs(fDeltaAngleX) + YLAbs(fDeltaAngleY) + YLAbs(fDeltaAngleZ) == 2)
-			multiple /= YLSqrt2;
+	QVector3D delta;
 
-		delta = QVector3D(-fDeltaAngleX * multiple, 0, fDeltaAngleY * multiple);
+	delta = QVector3D(fDeltaAngleX, fDeltaAngleY, fDeltaAngleZ).normalized();
+	QVector3D speed = m_pnlBall->newVelocity(delta, 0.03) / 30;
+
+	delta = QVector3D(-speed.x(), speed.z(), speed.y());
+	m_mtx4Eye.translate(delta);
+	m_vct3Ball += speed;
+	delta = QVector3D(-speed.y(), speed.x(), speed.z()).normalized();
+	float angle = 180 * sqrt(speed.x() * speed.x() + speed.y() * speed.y() + speed.z() * speed.z()) / YLPI;
+	m_qtnBall = QQuaternion::fromAxisAndAngle(delta, angle) * m_qtnBall;
+
+	this->updateGL();
+}
+
+
+
+void BallancepathOpenglWidget::ResetGame()
+{
+	this->m_parent->setStatus(Ballance::GAMESTATUS_START);
+
+	QVector3D delta;
+	//调整看点
+	m_mtx4Eye.setToIdentity();
+	delta = QVector3D(0, -1, 0).normalized();
+	for (int i = 0; i < 18; i++)
 		m_mtx4Eye.translate(delta);
-		delta = QVector3D(fDeltaAngleX * multiple, fDeltaAngleY * multiple, 0);
-		m_vct4Ball += delta;
-		delta = QVector3D(-fDeltaAngleY, fDeltaAngleX, fDeltaAngleZ).normalized();
-		m_qtnBall = QQuaternion::fromAxisAndAngle(delta, m_fBallSpeed) * m_qtnBall;
+	m_mtx4Eye.rotate(45, 1, 0, 0);
+	//调整地图旋转度
+	m_qtnPath = QQuaternion::fromAxisAndAngle(QVector3D(0, 0, 0), 0);
+	delta = QVector3D(1, 0, 0).normalized();
+	m_qtnPath = QQuaternion::fromAxisAndAngle(delta, -90) * m_qtnPath;
+	//调整球体旋转度使球表面显示合适的图案
+	m_qtnBall = QQuaternion::fromAxisAndAngle(QVector3D(0, 0, 0), 0);
+	delta = QVector3D(0, 0, 1).normalized();
+	m_qtnBall = QQuaternion::fromAxisAndAngle(delta, -90) * m_qtnBall;
+	//调整球体位置
+	m_vct3Ball = QVector3D(0, 0, 1);
 
-		this->updateGL();
+	m_pnlBall->setVelocity0(QVector3D(0, 0, 0));
+
+	m_nTmrMoveEverything = 0;
+	m_bPressBnW = false;
+	m_bPressBnS = false;
+	m_bPressBnA = false;
+	m_bPressBnD = false;
+}
+
+
+
+void BallancepathOpenglWidget::CheckGameStatus(int s)
+{
+	switch (s)
+	{
+	case -1:
+	{
+		if (this->m_parent->getStatus() == Ballance::GAMESTATUS_START)
+		{
+			this->m_parent->setStatus(Ballance::GAMESTATUS_OVER);
+			QMessageBox::StandardButton res;
+			res = QMessageBox::information(this, "Ballance", "defeat", QMessageBox::Retry | QMessageBox::Cancel);
+			if (res == QMessageBox::Retry)
+			{
+				this->ResetGame();
+			}
+			else if (res == QMessageBox::Cancel)
+			{
+				this->close();
+			}
+		}
+		break;
+	}
+	case 0:
+	{
+		break;
+	}
+	case 1:
+	{
+		if (this->m_parent->getStatus() == Ballance::GAMESTATUS_START)
+		{
+			this->m_parent->setStatus(Ballance::GAMESTATUS_WIN);
+			QMessageBox::StandardButton res;
+			res = QMessageBox::information(this, "Ballance", "win", QMessageBox::Ok | QMessageBox::Retry);
+			if (res == QMessageBox::Ok)
+			{
+				this->close();
+			}
+			else if (res == QMessageBox::Retry)
+			{
+				this->ResetGame();
+			}
+		}
+		break;
+	}
 	}
 }
 

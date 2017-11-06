@@ -23,6 +23,7 @@ public:
 	static void DrawpYramid();
 	static void DrawMagicCube();
 	static void DrawOrb(double radius, int slices, int stacks);
+
 };
 
 #endif // YLOPENGLPAINTER_H

@@ -65,14 +65,22 @@ public:
 #endif
 	};
 
-	template<typename Func> void foreachPathUnit(Func func)
+	template<typename Func> int foreachPathUnit(const QVector3D &ballpos, Func func)
 	{
-		m_tre4Path->traversalPreorder([&](PathUnit &initdatapathunit, YLTree4<PathUnit>::NODE *pinitdatanode)
+		int res = -1;
+		m_tre4Path->traversalPreorder([&](PathUnit &pathunit, YLTree4<PathUnit>::NODE *punitnode)
 		{
-			const PathUnit &pathunit = initdatapathunit;
-			func(pathunit);
+			const PathUnit &unit = pathunit;
+			if (res != 0)
+			{
+				res = this->check(ballpos, punitnode);
+			}
+			func(unit);
 		});
+		return res;
 	}
+
+	int check(const QVector3D &point, YLTree4<PathUnit>::NODE *punitnode);
 
 protected:
 	void InitData();

@@ -3,6 +3,7 @@
 #define BALLANCEPATHOPENGLWIDGET_H
 
 #include "ylqtwidgetheader.h"
+#include "ylnaturallaw.h"
 
 class Ballance;
 class CBallancePath;
@@ -32,6 +33,8 @@ protected:
 	void PaintPath();
 	void PaintBall();
 	void MoveEverything();
+	void ResetGame();
+	void CheckGameStatus(int s);
 
 private:
 	Ballance *m_parent;
@@ -40,9 +43,9 @@ private:
 	GLuint *m_punTexture;														//贴图
 	QMatrix4x4 m_mtx4Eye;														//矩阵保存看点属性
 	QQuaternion m_qtnPath;														//四元数保存地图旋转度属性
-	QVector3D m_vct4Ball;														//坐标值保存球体坐标属性
+	QVector3D m_vct3Ball;														//坐标值保存球体坐标属性
 	QQuaternion m_qtnBall;														//四元数保存球体旋转度属性
-	float m_fBallSpeed;															//球体运动速度
+	YLNaturalLaw *m_pnlBall;
 
 	int m_nTmrMoveEverything;
 	bool m_bPressBnW;

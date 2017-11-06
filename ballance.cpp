@@ -154,6 +154,23 @@ void Ballance::mySetLayout()
 
 
 
+int Ballance::getStatus() const
+{
+	return this->m_nCurrentStatus;
+}
+
+bool Ballance::setStatus(int status)
+{
+	if (status > GAMESTATUS && status < GAMESTATUS_END)
+	{
+		this->m_nCurrentStatus = status;
+		return true;
+	}
+	return false;
+}
+
+
+
 
 
 void Ballance::paintEvent(QPaintEvent *e)
@@ -175,7 +192,7 @@ void Ballance::keyPressEvent(QKeyEvent *event)
 	{
 	case Qt::Key_F11:						//F11为全屏和普通屏的切换键
 	{
-		qDebug() << "Ballance::keyPressEvent" << "Key_F11";
+//		qDebug() << "Ballance::keyPressEvent" << "Key_F11";
 		if (this->isFullScreen())
 		{
 			this->showNormal();
@@ -220,27 +237,27 @@ void Ballance::keyPressEvent(QKeyEvent *event)
 	}
 	case Qt::Key_Up:
 	{
-		qDebug() << "Ballance::keyPressEvent" << "Key_Up";
+//		qDebug() << "Ballance::keyPressEvent" << "Key_Up";
 		break;
 	}
 	case Qt::Key_Down:
 	{
-		qDebug() << "Ballance::keyPressEvent" << "Key_Down";
+//		qDebug() << "Ballance::keyPressEvent" << "Key_Down";
 		break;
 	}
 	case Qt::Key_Left:
 	{
-		qDebug() << "Ballance::keyPressEvent" << "Key_Left";
+//		qDebug() << "Ballance::keyPressEvent" << "Key_Left";
 		break;
 	}
 	case Qt::Key_Right:
 	{
-		qDebug() << "Ballance::keyPressEvent" << "Key_Right";
+//		qDebug() << "Ballance::keyPressEvent" << "Key_Right";
 		break;
 	}
 	case Qt::Key_Escape:					//ESC为退出键
 	{
-		qDebug() << "Ballance::keyPressEvent" << "Key_Escape";
+//		qDebug() << "Ballance::keyPressEvent" << "Key_Escape";
 		if (m_nCurrentStatus == Ballance::PAGE_START)
 		{
 //			this->on_bnQuit();
@@ -337,6 +354,8 @@ void Ballance::on_bnLevels()
 	m_nCurrentStatus = Ballance::GAMESTATUS_START;
 	m_pwLevel->hide();
 	m_pbglwGame = new BallancepathOpenglWidget(this);
+	m_pbglwGame->setAttribute(Qt::WA_DeleteOnClose);							//设置窗口关闭时自动删除
+	this->connect(m_pbglwGame, SIGNAL(destroyed()), this, SLOT(on_bnNewgame()));
 	m_pbglwGame->move(0, 0);
 	m_pbglwGame->setFixedSize(m_nWidth, m_nHeight);
 	m_pbglwGame->show();

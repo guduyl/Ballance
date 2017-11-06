@@ -51,7 +51,7 @@
 	+ 整理现阶段能够画出的图形为静态方法
 
 
-## 2017年11月01日 星期三
+## 2017年11月1日 星期三
 
 ### 项目进展
 * `BallancepathOpenglWidget : public QGLWidget`
@@ -59,7 +59,7 @@
 	+ 构建观察点，使其与Ball的平移分量相对静止
 
 
-## 2017年11月02日 星期四
+## 2017年11月2日 星期四
 
 ### 项目进展
 * `BallancepathOpenglWidget : public QGLWidget`
@@ -75,7 +75,7 @@
 
 ### 1. 项目进展
 * `YLTree4`
-	+ 完成四叉树扩展（添加结点）、遍历等基本方法编写
+	+ 完成四叉树扩展（添加结点）、遍历等基本方法编写*（**指针不安全**）*
 * `CBallancePath`
 	+ 使用四叉树计算地图
 
@@ -96,7 +96,21 @@
 ### 2. 项目进展
 * `CBallancePath`
 	+ 完善map计算规则
-	+ 向controller提供接口
+	+ 向controller提供绘制地图接口
+
+
+## 2017年11月6日 星期一
+
+### 项目进展
+* `BallancepathOpenglWidget : public QGLWidget`
+	+ 完善游戏逻辑，输赢*（**PaintPath有资源浪费**）*
+	+ 在水平面上添加惯性系统，使球体更加真实
+* `CBallancePath`
+	+ 向controller提供碰撞检测接口
+* `Ballance : public QWidget`
+	+ 响应子窗口退出事件
+* **创建**自然法则（物理引擎）类`YLNaturalLaw`
+	+ 模拟水平面内的惯性系统
 
 
 
@@ -108,11 +122,11 @@
 # Ballance Project 更新频率
 
 
-## 2017年10月31日 ———— 2017年11月01日
+## 2017年10月31日 —— 2017年11月01日
 学习GitHub使用方法
 
 
-## 2017年11月02日 ———— 至今
+## 2017年11月02日 —— 至今
 工作日每天晚上10点左右更新代码，周末不定时更新
 
 

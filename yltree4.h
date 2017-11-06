@@ -150,7 +150,7 @@ public:
 	 */
 	void clear()
 	{
-		qDebug() << "YLTree4::clear";
+//		qDebug() << "YLTree4::clear";
 
 		this->traversalPostorder([&](T &t, NODE *n)
 		{

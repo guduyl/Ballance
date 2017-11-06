@@ -19,6 +19,28 @@ public:
 	explicit Ballance(QWidget *parent = 0);
 	~Ballance();
 
+	static enum enums
+	{
+		PAGE_START,
+
+		PAGES 				 = 10,
+		PAGE_LEVEL,
+		PAGE_CUSTOM,
+		PAGE_SCORE,
+		PAGE_ABOUT,
+		PAGES_END,
+
+		GAMESTATUS 			 = 20,
+		GAMESTATUS_START,
+		GAMESTATUS_PAUSE,
+		GAMESTATUS_WIN,
+		GAMESTATUS_OVER,
+		GAMESTATUS_END,
+	} m_enums;
+
+	int getStatus() const;
+	bool setStatus(int status);
+
 public slots:
 	void on_bnNewgame();
 	void on_bnCustom();
@@ -37,7 +59,6 @@ protected:
 private:
 	Ui::Ballance *ui;
 
-//public:
 	int m_nWidth;
 	int m_nHeight;
 
@@ -59,24 +80,6 @@ private:
 
 	BallancepathOpenglWidget *m_pbglwGame;
 
-	static enum enums
-	{
-		PAGE_START,
-
-		PAGES 				 = 10,
-		PAGE_LEVEL,
-		PAGE_CUSTOM,
-		PAGE_SCORE,
-		PAGE_ABOUT,
-		PAGES_END,
-
-		GAMESTATUS 			 = 20,
-		GAMESTATUS_START,
-		GAMESTATUS_PAUSE,
-		GAMESTATUS_WIN,
-		GAMESTATUS_OVER,
-		GAMESTATUS_END,
-	} m_enums;
 	int m_nCurrentStatus;
 
 };

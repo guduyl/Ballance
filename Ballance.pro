@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,14 +16,16 @@ SOURCES += main.cpp\
         ballance.cpp \
     ballancepath.cpp \
     ballancepathopenglwidget.cpp \
-    ylopenglpainter.cpp
+    ylopenglpainter.cpp \
+    ylnaturallaw.cpp
 
 HEADERS  += ballance.h \
     ballancepath.h \
 	ballancepathopenglwidget.h \
     ylqtwidgetheader.h \
     ylopenglpainter.h \
-    yltree4.h
+    yltree4.h \
+    ylnaturallaw.h
 
 
 
@@ -46,18 +48,12 @@ DEFINES += YL_WIN32_QT
 
 DISTFILES += \
     resource/img/earth.jpg \
-    resource/img/earth.png \
-    resource/img/mmexport1502771182717.png \
-    resource/img/mmexport1507349001837.png \
-    resource/img/mmexport1507349023277.png \
-    resource/img/mmexport1507349027215.png \
-    resource/img/mmexport1507349033771.png \
-    resource/earth.png \
     resource/img/earth1.ico \
     resource/ballance.ico \
     resource/ballance.rc \
     README.md \
-	RECORD.md
+	RECORD.md \
+    resource/img/map.jpg
 
 
 

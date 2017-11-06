@@ -299,6 +299,32 @@ void CBallancePath::InitData()
 
 
 
+int CBallancePath::check(const QVector3D &point, YLTree4<PathUnit>::NODE *punitnode)
+{
+//	qDebug() << "CBallancePath::check";
+
+
+	PathUnit unit = punitnode->nodeData;
+	if (point.x() < unit.posx1 || point.x() > unit.posx2 ||
+			point.y() < unit.posy2 || point.y() > unit.posy1)
+	{
+		return -1;																//输
+	}
+	else if ((unit.mode & PATHTYPE) == PATHTYPESTOP &&
+			 (point.x() > unit.posx1 + unit.imagesize->width() / 3 &&
+			  point.x() < unit.posx2 + unit.imagesize->width() / 3 * 2 &&
+			  point.y() > unit.posy2 + unit.imagesize->height() / 3 &&
+			  point.y() < unit.posy1 + unit.imagesize->height() / 3 * 2))
+	{
+		return 1;																//赢
+	}
+	return 0;																	//游戏继续
+}
+
+
+
+
+
 
 
 

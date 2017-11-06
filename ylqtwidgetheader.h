@@ -23,10 +23,15 @@
 #include <QFocusEvent>
 #include <QTimer>
 
+#include <QCoreApplication>
+
 #include <QGridLayout>
 #include <QPushButton>
 #include <QImage>
 #include <QMessageBox>
+
+#include <QSound>
+#include <QMediaPlayer>
 
 #include <QDebug>
 
@@ -41,6 +46,8 @@
 #include <QOpenGLWidget>
 #include <QQuaternion>
 #include <QBasicTimer>
+#include <QtGlobal>
+#include <QTime>
 
 
 

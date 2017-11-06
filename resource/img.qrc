@@ -1,11 +1,6 @@
 <RCC>
     <qresource prefix="/bgimg">
         <file>earth.jpg</file>
-        <file>mmexport1502771182717.png</file>
-        <file>mmexport1507349001837.png</file>
-        <file>mmexport1507349023277.png</file>
-        <file>mmexport1507349027215.png</file>
-        <file>mmexport1507349033771.png</file>
         <file>map.jpg</file>
     </qresource>
     <qresource prefix="/icon">
