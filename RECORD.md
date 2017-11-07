@@ -113,6 +113,15 @@
 	+ 模拟水平面内的惯性系统
 
 
+## 2017年11月7日 星期二
+
+### 项目进展
+* `YLNaturalLaw`
+	+ 加入重力系统
+* `BallancepathOpenglWidget : public QGLWidget`
+	+ 在垂直方向上加入重力加速度
+
+
 
 
 

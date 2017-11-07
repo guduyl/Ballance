@@ -4,6 +4,8 @@
 #include "ballancepathopenglwidget.h"
 #include "ylopenglpainter.h"
 
+#define PAINTFREQUENCY					40.0f
+
 
 
 
@@ -30,7 +32,7 @@ BallancepathOpenglWidget::~BallancepathOpenglWidget()
 {
 	qDebug() << "BallancepathOpenglWidget::~BallancepathOpenglWidget";
 
-	this->m_parent->setStatus(Ballance::GAMESTATUS_OVER);
+	m_parent->setStatus(Ballance::GAMESTATUS_OVER);
 
 	delete m_Path;
 	delete[] m_punTexture;
@@ -77,6 +79,8 @@ void BallancepathOpenglWidget::resizeGL(int w, int h)
 	gluPerspective(45.0, (GLfloat)w/(GLfloat)h, 0.1, 100.0);					//设置视口的大小
 	glMatrixMode(GL_MODELVIEW);													//选择模型观察矩阵
 	glLoadIdentity();															//重置模型观察矩阵
+
+	m_szBg = QSize(w / 13.6, w / 13.6 * 0.618);
 }
 
 
@@ -94,12 +98,9 @@ void BallancepathOpenglWidget::paintGL()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-//	YLOpenGLPainter::ShowScreen1(NULL, m_punTexture + 6, NULL);
-//	return ;
-
 	QMatrix4x4 matrix;
 	matrix.setToIdentity();
-	matrix.translate(QVector3D(0, 0, -24));
+	matrix.translate(QVector3D(0, 0, -24));										//Y轴
 	matrix = m_mtx4Eye * matrix;												//设置看点
 
 	//绘制坐标系
@@ -117,9 +118,9 @@ void BallancepathOpenglWidget::paintGL()
 	this->PaintBall();
 
 	//开启定时器
-	if (this->m_parent->getStatus() == Ballance::GAMESTATUS_START)
+	if (m_parent->getStatus() != Ballance::GAMESTATUS_PAUSE)
 	{
-		m_nTmrMoveEverything = this->startTimer(30);
+		m_nTmrMoveEverything = this->startTimer(1000 / PAINTFREQUENCY);
 	}
 }
 
@@ -146,7 +147,7 @@ bool BallancepathOpenglWidget::event(QEvent *event)
 //			qDebug() << "BallancepathOpenglWidget::event" << "ignored" << "Key_F11 || Key_Escape";
 			return false;
 		}
-		else if (this->m_parent->getStatus() != Ballance::GAMESTATUS_START)
+		else if (m_parent->getStatus() != Ballance::GAMESTATUS_START)
 		{
 			return true;
 		}
@@ -168,7 +169,37 @@ void BallancepathOpenglWidget::timerEvent(QTimerEvent *event)
 
 	if (event->timerId() == m_nTmrMoveEverything)
 	{
-		this->MoveEverything();
+		this->killTimer(m_nTmrMoveEverything);
+		switch (this->m_parent->getStatus())
+		{
+		case Ballance::GAMESTATUS_START:
+		{
+			this->MoveEverything();
+			break;
+		}
+		case Ballance::GAMESTATUS_LOSE:
+		{
+			++m_nTmDrop;
+			if (m_nTmDrop == PAINTFREQUENCY)
+			{
+				m_parent->setStatus(Ballance::GAMESTATUS_PAUSE);
+				QMessageBox::StandardButton res;
+				res = QMessageBox::information(this, "Ballance", "defeat", QMessageBox::Retry | QMessageBox::Cancel);
+				if (res == QMessageBox::Retry)
+				{
+					this->ResetGame();
+				}
+				else if (res == QMessageBox::Cancel)
+				{
+					this->close();
+				}
+			}
+			else
+				this->MoveEverything();
+			break;
+		}
+		default: break;
+		}
 	}
 }
 
@@ -193,7 +224,10 @@ void BallancepathOpenglWidget::keyPressEvent(QKeyEvent *event)
 	{
 //		qDebug() << "BallancepathOpenglWidget::keyPressEvent" << "Key_Up-ax";
 
-		m_bPressBnW = true;
+		if (m_parent->getStatus() == Ballance::GAMESTATUS_START)
+		{
+			m_bPressBnW = true;
+		}
 		break;
 	}
 	case Qt::Key_S:
@@ -201,7 +235,10 @@ void BallancepathOpenglWidget::keyPressEvent(QKeyEvent *event)
 	{
 //		qDebug() << "BallancepathOpenglWidget::keyPressEvent" << "Key_Down+ax";
 
-		m_bPressBnS = true;
+		if (m_parent->getStatus() == Ballance::GAMESTATUS_START)
+		{
+			m_bPressBnS = true;
+		}
 		break;
 	}
 	case Qt::Key_A:
@@ -209,7 +246,10 @@ void BallancepathOpenglWidget::keyPressEvent(QKeyEvent *event)
 	{
 //		qDebug() << "BallancepathOpenglWidget::keyPressEvent" << "Key_Left-ay";
 
-		m_bPressBnA = true;
+		if (m_parent->getStatus() == Ballance::GAMESTATUS_START)
+		{
+			m_bPressBnA = true;
+		}
 		break;
 	}
 	case Qt::Key_D:
@@ -217,7 +257,10 @@ void BallancepathOpenglWidget::keyPressEvent(QKeyEvent *event)
 	{
 //		qDebug() << "BallancepathOpenglWidget::keyPressEvent" << "Key_Right+ay";
 
-		m_bPressBnD = true;
+		if (m_parent->getStatus() == Ballance::GAMESTATUS_START)
+		{
+			m_bPressBnD = true;
+		}
 		break;
 	}
 	case Qt::Key_PageUp:
@@ -263,7 +306,10 @@ void BallancepathOpenglWidget::keyReleaseEvent(QKeyEvent *event)
 	{
 //		qDebug() << "BallancepathOpenglWidget::keyReleaseEvent" << "Key_Up-ax";
 
-		m_bPressBnW = false;
+		if (m_parent->getStatus() == Ballance::GAMESTATUS_START)
+		{
+			m_bPressBnW = false;
+		}
 		break;
 	}
 	case Qt::Key_S:
@@ -271,7 +317,10 @@ void BallancepathOpenglWidget::keyReleaseEvent(QKeyEvent *event)
 	{
 //		qDebug() << "BallancepathOpenglWidget::keyReleaseEvent" << "Key_Down+ax";
 
-		m_bPressBnS = false;
+		if (m_parent->getStatus() == Ballance::GAMESTATUS_START)
+		{
+			m_bPressBnS = false;
+		}
 		break;
 	}
 	case Qt::Key_A:
@@ -279,7 +328,10 @@ void BallancepathOpenglWidget::keyReleaseEvent(QKeyEvent *event)
 	{
 //		qDebug() << "BallancepathOpenglWidget::keyReleaseEvent" << "Key_Left-ay";
 
-		m_bPressBnA = false;
+		if (m_parent->getStatus() == Ballance::GAMESTATUS_START)
+		{
+			m_bPressBnA = false;
+		}
 		break;
 	}
 	case Qt::Key_D:
@@ -287,7 +339,10 @@ void BallancepathOpenglWidget::keyReleaseEvent(QKeyEvent *event)
 	{
 //		qDebug() << "BallancepathOpenglWidget::keyReleaseEvent" << "Key_Right+ay";
 
-		m_bPressBnD = false;
+		if (m_parent->getStatus() == Ballance::GAMESTATUS_START)
+		{
+			m_bPressBnD = false;
+		}
 		break;
 	}
 	default: break;
@@ -347,6 +402,14 @@ void BallancepathOpenglWidget::LoadTexture()
 	//滤波方式
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	buf.load(":/bgimg/earth.jpg");
+	tex = QGLWidget::convertToGLFormat(buf);
+	glGenTextures(1, &m_punTexture[2]);
+	glBindTexture(GL_TEXTURE_2D, m_punTexture[2]);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, tex.width(), tex.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, tex.bits());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
 
@@ -378,13 +441,17 @@ void BallancepathOpenglWidget::PaintCoordinate()
 		if (i == 0)
 			continue;
 		glColor3f(0.0, 0.0, 1.0);
-		glVertex3f(-COORDINATELENGTH, i, 0);
+//		glVertex3f(-COORDINATELENGTH, i, 0);
+		glVertex3f(-COORDINATELENGTH, i, -15);
 		glColor3f(1.0, 1.0, 0.0);
-		glVertex3f(COORDINATELENGTH, i, 0);
+//		glVertex3f(COORDINATELENGTH, i, 0);
+		glVertex3f(COORDINATELENGTH, i, -15);
 		glColor3f(0.0, 0.0, 1.0);
-		glVertex3f(i, -COORDINATELENGTH, 0);
+//		glVertex3f(i, -COORDINATELENGTH, 0);
+		glVertex3f(i, -COORDINATELENGTH, -15);
 		glColor3f(1.0, 1.0, 0.0);
-		glVertex3f(i, COORDINATELENGTH, 0);
+//		glVertex3f(i, COORDINATELENGTH, 0);
+		glVertex3f(i, COORDINATELENGTH, -15);
 	}
 	glEnd();
 	glColor3f(1.0, 1.0, 1.0);
@@ -394,7 +461,8 @@ void BallancepathOpenglWidget::PaintCoordinate()
 	{
 		for (int j = -COORDINATELENGTH; j <= COORDINATELENGTH; j += 10)
 		{
-			glVertex3f(i, j, 0);
+//			glVertex3f(i, j, 0);
+			glVertex3f(i, j, -15);
 		}
 	}
 	glEnd();
@@ -411,6 +479,20 @@ void BallancepathOpenglWidget::PaintPath()
 {
 //	qDebug() << "BallancepathOpenglWidget::PaintPath";
 
+	//背景
+	glBindTexture(GL_TEXTURE_2D, m_punTexture[2]);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0, 1.0);
+	glVertex3f(m_vct3Ball.x() - m_szBg.width() / 2, m_vct3Ball.y() + m_szBg.height(), m_vct3Ball.z() - 16);
+	glTexCoord2f(1.0, 1.0);
+	glVertex3f(m_vct3Ball.x() + m_szBg.width() / 2, m_vct3Ball.y() + m_szBg.height(), m_vct3Ball.z() - 16);
+	glTexCoord2f(1.0, 0.0);
+	glVertex3f(m_vct3Ball.x() + m_szBg.width() / 2, m_vct3Ball.y(), m_vct3Ball.z() - 16);
+	glTexCoord2f(0.0, 0.0);
+	glVertex3f(m_vct3Ball.x() - m_szBg.width() / 2, m_vct3Ball.y(), m_vct3Ball.z() - 16);
+	glEnd();
+
+	//地图
 	glBindTexture(GL_TEXTURE_2D, m_punTexture[0]);
 	glLineWidth(8);
 	int gameres = m_Path->foreachPathUnit(m_vct3Ball, [&](const CBallancePath::PathUnit &pu)
@@ -447,22 +529,21 @@ void BallancepathOpenglWidget::MoveEverything()
 {
 //	qDebug() << "BallancepathOpenglWidget::MoveEverything";
 
-	this->killTimer(m_nTmrMoveEverything);
-
 	float fDeltaAngleX = (float)m_bPressBnD - (float)m_bPressBnA;
 	float fDeltaAngleY = (float)m_bPressBnW - (float)m_bPressBnS;
-	float fDeltaAngleZ = 0;
+	float fDeltaAngleZ = (float)m_bDrop;
 
 	QVector3D delta;
 
-	delta = QVector3D(fDeltaAngleX, fDeltaAngleY, fDeltaAngleZ).normalized();
-	QVector3D speed = m_pnlBall->newVelocity(delta, 0.03) / 30;
+	delta = QVector3D(fDeltaAngleX, fDeltaAngleY, -fDeltaAngleZ).normalized();
+	QVector3D displacement = m_pnlBall->Displacement(delta, 1 / PAINTFREQUENCY);
 
-	delta = QVector3D(-speed.x(), speed.z(), speed.y());
+	delta = QVector3D(-displacement.x(), -displacement.z(), displacement.y());
 	m_mtx4Eye.translate(delta);
-	m_vct3Ball += speed;
-	delta = QVector3D(-speed.y(), speed.x(), speed.z()).normalized();
-	float angle = 180 * sqrt(speed.x() * speed.x() + speed.y() * speed.y() + speed.z() * speed.z()) / YLPI;
+	m_vct3Ball += displacement;
+	delta = QVector3D(-displacement.y(), displacement.x(), 0).normalized();
+//	float angle = 180 * sqrt(displacement.x() * displacement.x() + displacement.y() * displacement.y() + displacement.z() * displacement.z()) / YLPI;
+	float angle = 180 * sqrt(displacement.x() * displacement.x() + displacement.y() * displacement.y()) / YLPI;
 	m_qtnBall = QQuaternion::fromAxisAndAngle(delta, angle) * m_qtnBall;
 
 	this->updateGL();
@@ -472,13 +553,13 @@ void BallancepathOpenglWidget::MoveEverything()
 
 void BallancepathOpenglWidget::ResetGame()
 {
-	this->m_parent->setStatus(Ballance::GAMESTATUS_START);
+	m_parent->setStatus(Ballance::GAMESTATUS_START);
 
 	QVector3D delta;
 	//调整看点
 	m_mtx4Eye.setToIdentity();
 	delta = QVector3D(0, -1, 0).normalized();
-	for (int i = 0; i < 18; i++)
+	for (int i = 0; i < 18; i++)												//Z轴
 		m_mtx4Eye.translate(delta);
 	m_mtx4Eye.rotate(45, 1, 0, 0);
 	//调整地图旋转度
@@ -499,6 +580,8 @@ void BallancepathOpenglWidget::ResetGame()
 	m_bPressBnS = false;
 	m_bPressBnA = false;
 	m_bPressBnD = false;
+	m_nTmDrop = 0;
+	m_bDrop = false;
 }
 
 
@@ -507,33 +590,28 @@ void BallancepathOpenglWidget::CheckGameStatus(int s)
 {
 	switch (s)
 	{
-	case -1:
+	case -1:																	//输
 	{
-		if (this->m_parent->getStatus() == Ballance::GAMESTATUS_START)
+		if (m_parent->getStatus() == Ballance::GAMESTATUS_START)
 		{
-			this->m_parent->setStatus(Ballance::GAMESTATUS_OVER);
-			QMessageBox::StandardButton res;
-			res = QMessageBox::information(this, "Ballance", "defeat", QMessageBox::Retry | QMessageBox::Cancel);
-			if (res == QMessageBox::Retry)
-			{
-				this->ResetGame();
-			}
-			else if (res == QMessageBox::Cancel)
-			{
-				this->close();
-			}
+			m_bPressBnW = false;
+			m_bPressBnS = false;
+			m_bPressBnA = false;
+			m_bPressBnD = false;
+			m_bDrop = true;
+			this->m_parent->setStatus(Ballance::GAMESTATUS_LOSE);
 		}
 		break;
 	}
-	case 0:
+	case 0:																		//继续
 	{
 		break;
 	}
-	case 1:
+	case 1:																		//赢
 	{
-		if (this->m_parent->getStatus() == Ballance::GAMESTATUS_START)
+		if (m_parent->getStatus() == Ballance::GAMESTATUS_START)
 		{
-			this->m_parent->setStatus(Ballance::GAMESTATUS_WIN);
+			m_parent->setStatus(Ballance::GAMESTATUS_WIN);
 			QMessageBox::StandardButton res;
 			res = QMessageBox::information(this, "Ballance", "win", QMessageBox::Ok | QMessageBox::Retry);
 			if (res == QMessageBox::Ok)

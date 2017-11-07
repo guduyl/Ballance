@@ -42,16 +42,19 @@ private:
 
 	GLuint *m_punTexture;														//贴图
 	QMatrix4x4 m_mtx4Eye;														//矩阵保存看点属性
+	QSize m_szBg;																//背景图片大小
 	QQuaternion m_qtnPath;														//四元数保存地图旋转度属性
 	QVector3D m_vct3Ball;														//坐标值保存球体坐标属性
 	QQuaternion m_qtnBall;														//四元数保存球体旋转度属性
-	YLNaturalLaw *m_pnlBall;
+	YLNaturalLaw *m_pnlBall;													//物理引擎
 
 	int m_nTmrMoveEverything;
 	bool m_bPressBnW;
 	bool m_bPressBnS;
 	bool m_bPressBnA;
 	bool m_bPressBnD;
+	int m_nTmDrop;
+	bool m_bDrop;
 
 };
 
