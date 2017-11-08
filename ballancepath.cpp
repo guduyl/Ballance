@@ -119,10 +119,10 @@ void CBallancePath::InitData()
 		{
 		case PATHTYPESTART :
 		{
-			initpathunit.posx1 = -initpathunit.imagesize->width() / 2;
-			initpathunit.posy1 = initpathunit.imagesize->height() / 2;
-			initpathunit.posx2 = initpathunit.imagesize->width() / 2;
-			initpathunit.posy2 = -initpathunit.imagesize->height() / 2;
+			initpathunit.posx1 = -initpathunit.unitsize->width() / 2;
+			initpathunit.posy1 = initpathunit.unitsize->height() / 2;
+			initpathunit.posx2 = initpathunit.unitsize->width() / 2;
+			initpathunit.posy2 = -initpathunit.unitsize->height() / 2;
 			break;
 		}
 		case PATHTYPEWOOD3 :
@@ -135,9 +135,9 @@ void CBallancePath::InitData()
 			{
 				if (temptype == PATHTYPESTART)
 				{
-					initpathunit.posx1 = -initpathunit.imagesize->width() / 2;
-					initpathunit.posy1 = preinitpathunit.posy1 + initpathunit.imagesize->height() * initpathunit.length;
-					initpathunit.posx2 = initpathunit.imagesize->width() / 2;
+					initpathunit.posx1 = -initpathunit.unitsize->width() / 2;
+					initpathunit.posy1 = preinitpathunit.posy1 + initpathunit.unitsize->height() * initpathunit.unitamount;
+					initpathunit.posx2 = initpathunit.unitsize->width() / 2;
 					initpathunit.posy2 = preinitpathunit.posy1;
 				}
 				else if (tempdir == PATHDIRN)
@@ -149,14 +149,14 @@ void CBallancePath::InitData()
 				else if (tempdir == PATHDIRW)
 				{
 					initpathunit.posx1 = preinitpathunit.posx1;
-					initpathunit.posy1 = preinitpathunit.posy1 + initpathunit.imagesize->height() * initpathunit.length;
-					initpathunit.posx2 = preinitpathunit.posx1 + initpathunit.imagesize->width();
+					initpathunit.posy1 = preinitpathunit.posy1 + initpathunit.unitsize->height() * initpathunit.unitamount;
+					initpathunit.posx2 = preinitpathunit.posx1 + initpathunit.unitsize->width();
 					initpathunit.posy2 = preinitpathunit.posy1;
 				}
 				else if (tempdir == PATHDIRE)
 				{
-					initpathunit.posx1 = preinitpathunit.posx2 - initpathunit.imagesize->width();
-					initpathunit.posy1 = preinitpathunit.posy1 + initpathunit.imagesize->height() * initpathunit.length;
+					initpathunit.posx1 = preinitpathunit.posx2 - initpathunit.unitsize->width();
+					initpathunit.posy1 = preinitpathunit.posy1 + initpathunit.unitsize->height() * initpathunit.unitamount;
 					initpathunit.posx2 = preinitpathunit.posx2;
 					initpathunit.posy2 = preinitpathunit.posy1;
 				}
@@ -166,10 +166,10 @@ void CBallancePath::InitData()
 			{
 				if (temptype == PATHTYPESTART)
 				{
-					initpathunit.posx1 = -initpathunit.imagesize->width() / 2;
+					initpathunit.posx1 = -initpathunit.unitsize->width() / 2;
 					initpathunit.posy1 = preinitpathunit.posy2;
-					initpathunit.posx2 = initpathunit.imagesize->width() / 2;
-					initpathunit.posy2 = preinitpathunit.posy2 - initpathunit.imagesize->height() * initpathunit.length;
+					initpathunit.posx2 = initpathunit.unitsize->width() / 2;
+					initpathunit.posy2 = preinitpathunit.posy2 - initpathunit.unitsize->height() * initpathunit.unitamount;
 				}
 				else if (tempdir == PATHDIRN)
 				{
@@ -181,15 +181,15 @@ void CBallancePath::InitData()
 				{
 					initpathunit.posx1 = preinitpathunit.posx1;
 					initpathunit.posy1 = preinitpathunit.posy2;
-					initpathunit.posx2 = preinitpathunit.posx1 + initpathunit.imagesize->width();
-					initpathunit.posy2 = preinitpathunit.posy2 - initpathunit.imagesize->height() * initpathunit.length;
+					initpathunit.posx2 = preinitpathunit.posx1 + initpathunit.unitsize->width();
+					initpathunit.posy2 = preinitpathunit.posy2 - initpathunit.unitsize->height() * initpathunit.unitamount;
 				}
 				else if (tempdir == PATHDIRE)
 				{
-					initpathunit.posx1 = preinitpathunit.posx2 - initpathunit.imagesize->width();
+					initpathunit.posx1 = preinitpathunit.posx2 - initpathunit.unitsize->width();
 					initpathunit.posy1 = preinitpathunit.posy2;
 					initpathunit.posx2 = preinitpathunit.posx2;
-					initpathunit.posy2 = preinitpathunit.posy2 - initpathunit.imagesize->height() * initpathunit.length;
+					initpathunit.posy2 = preinitpathunit.posy2 - initpathunit.unitsize->height() * initpathunit.unitamount;
 				}
 				break;
 			}
@@ -197,22 +197,22 @@ void CBallancePath::InitData()
 			{
 				if (temptype == PATHTYPESTART)
 				{
-					initpathunit.posx1 = preinitpathunit.posx1 - initpathunit.imagesize->height() * initpathunit.length;
-					initpathunit.posy1 = initpathunit.imagesize->width() / 2;
+					initpathunit.posx1 = preinitpathunit.posx1 - initpathunit.unitsize->height() * initpathunit.unitamount;
+					initpathunit.posy1 = initpathunit.unitsize->width() / 2;
 					initpathunit.posx2 = preinitpathunit.posx1;
-					initpathunit.posy2 = -initpathunit.imagesize->width() / 2;
+					initpathunit.posy2 = -initpathunit.unitsize->width() / 2;
 				}
 				else if (tempdir == PATHDIRN)
 				{
-					initpathunit.posx1 = preinitpathunit.posx1 - initpathunit.imagesize->height() * initpathunit.length;
+					initpathunit.posx1 = preinitpathunit.posx1 - initpathunit.unitsize->height() * initpathunit.unitamount;
 					initpathunit.posy1 = preinitpathunit.posy1;
 					initpathunit.posx2 = preinitpathunit.posx1;
-					initpathunit.posy2 = preinitpathunit.posy1 - initpathunit.imagesize->width();
+					initpathunit.posy2 = preinitpathunit.posy1 - initpathunit.unitsize->width();
 				}
 				else if (tempdir == PATHDIRS)
 				{
-					initpathunit.posx1 = preinitpathunit.posx1 - initpathunit.imagesize->height() * initpathunit.length;
-					initpathunit.posy1 = preinitpathunit.posy2 + initpathunit.imagesize->width();
+					initpathunit.posx1 = preinitpathunit.posx1 - initpathunit.unitsize->height() * initpathunit.unitamount;
+					initpathunit.posy1 = preinitpathunit.posy2 + initpathunit.unitsize->width();
 					initpathunit.posx2 = preinitpathunit.posx1;
 					initpathunit.posy2 = preinitpathunit.posy2;
 				}
@@ -229,22 +229,22 @@ void CBallancePath::InitData()
 				if (temptype == PATHTYPESTART)
 				{
 					initpathunit.posx1 = preinitpathunit.posx2;
-					initpathunit.posy1 = initpathunit.imagesize->width() / 2;
-					initpathunit.posx2 = preinitpathunit.posx2 + initpathunit.imagesize->height() * initpathunit.length;
-					initpathunit.posy2 = -initpathunit.imagesize->width() / 2;
+					initpathunit.posy1 = initpathunit.unitsize->width() / 2;
+					initpathunit.posx2 = preinitpathunit.posx2 + initpathunit.unitsize->height() * initpathunit.unitamount;
+					initpathunit.posy2 = -initpathunit.unitsize->width() / 2;
 				}
 				else if (tempdir == PATHDIRN)
 				{
 					initpathunit.posx1 = preinitpathunit.posx2;
 					initpathunit.posy1 = preinitpathunit.posy1;
-					initpathunit.posx2 = preinitpathunit.posx2 + initpathunit.imagesize->height() * initpathunit.length;
-					initpathunit.posy2 = preinitpathunit.posy1 - initpathunit.imagesize->width();
+					initpathunit.posx2 = preinitpathunit.posx2 + initpathunit.unitsize->height() * initpathunit.unitamount;
+					initpathunit.posy2 = preinitpathunit.posy1 - initpathunit.unitsize->width();
 				}
 				else if (tempdir == PATHDIRS)
 				{
 					initpathunit.posx1 = preinitpathunit.posx2;
-					initpathunit.posy1 = preinitpathunit.posy2 + initpathunit.imagesize->width();
-					initpathunit.posx2 = preinitpathunit.posx2 + initpathunit.imagesize->height() * initpathunit.length;
+					initpathunit.posy1 = preinitpathunit.posy2 + initpathunit.unitsize->width();
+					initpathunit.posx2 = preinitpathunit.posx2 + initpathunit.unitsize->height() * initpathunit.unitamount;
 					initpathunit.posy2 = preinitpathunit.posy2;
 				}
 				else if (tempdir == PATHDIRW)
@@ -264,31 +264,31 @@ void CBallancePath::InitData()
 			{
 			case PATHDIRN :
 			{
-				initpathunit.posx1 = preinitpathunit.posx1 - ((initpathunit.imagesize->width() - preinitpathunit.imagesize->width()) / 2);
-				initpathunit.posy1 = preinitpathunit.posy1 + initpathunit.imagesize->height();
+				initpathunit.posx1 = preinitpathunit.posx1 - ((initpathunit.unitsize->width() - preinitpathunit.unitsize->width()) / 2);
+				initpathunit.posy1 = preinitpathunit.posy1 + initpathunit.unitsize->height();
 				break;
 			}
 			case PATHDIRS :
 			{
-				initpathunit.posx1 = preinitpathunit.posx1 - ((initpathunit.imagesize->width() - preinitpathunit.imagesize->width()) / 2);
+				initpathunit.posx1 = preinitpathunit.posx1 - ((initpathunit.unitsize->width() - preinitpathunit.unitsize->width()) / 2);
 				initpathunit.posy1 = preinitpathunit.posy2;
 				break;
 			}
 			case PATHDIRW :
 			{
-				initpathunit.posx1 = preinitpathunit.posx1 - initpathunit.imagesize->width();
-				initpathunit.posy1 = preinitpathunit.posy1 + ((initpathunit.imagesize->height() - preinitpathunit.imagesize->width()) / 2);
+				initpathunit.posx1 = preinitpathunit.posx1 - initpathunit.unitsize->width();
+				initpathunit.posy1 = preinitpathunit.posy1 + ((initpathunit.unitsize->height() - preinitpathunit.unitsize->width()) / 2);
 				break;
 			}
 			case PATHDIRE :
 			{
 				initpathunit.posx1 = preinitpathunit.posx2;
-				initpathunit.posy1 = preinitpathunit.posy1 + ((initpathunit.imagesize->height() - preinitpathunit.imagesize->width()) / 2);
+				initpathunit.posy1 = preinitpathunit.posy1 + ((initpathunit.unitsize->height() - preinitpathunit.unitsize->width()) / 2);
 				break;
 			}
 			}
-			initpathunit.posx2 = initpathunit.posx1 + initpathunit.imagesize->width();
-			initpathunit.posy2 = initpathunit.posy1 - initpathunit.imagesize->height();
+			initpathunit.posx2 = initpathunit.posx1 + initpathunit.unitsize->width();
+			initpathunit.posy2 = initpathunit.posy1 - initpathunit.unitsize->height();
 			break;
 		}
 		}
@@ -311,10 +311,10 @@ int CBallancePath::check(const QVector3D &point, YLTree4<PathUnit>::NODE *punitn
 		return -1;																//输
 	}
 	else if ((unit.mode & PATHTYPE) == PATHTYPESTOP &&
-			 (point.x() > unit.posx1 + unit.imagesize->width() / 3 &&
-			  point.x() < unit.posx2 + unit.imagesize->width() / 3 * 2 &&
-			  point.y() > unit.posy2 + unit.imagesize->height() / 3 &&
-			  point.y() < unit.posy1 + unit.imagesize->height() / 3 * 2))
+			 (point.x() > unit.posx1 + unit.unitsize->width() / 3 &&
+			  point.x() < unit.posx2 + unit.unitsize->width() / 3 * 2 &&
+			  point.y() > unit.posy2 + unit.unitsize->height() / 3 &&
+			  point.y() < unit.posy1 + unit.unitsize->height() / 3 * 2))
 	{
 		return 1;																//赢
 	}

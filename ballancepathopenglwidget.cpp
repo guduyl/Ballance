@@ -80,7 +80,7 @@ void BallancepathOpenglWidget::resizeGL(int w, int h)
 	glMatrixMode(GL_MODELVIEW);													//选择模型观察矩阵
 	glLoadIdentity();															//重置模型观察矩阵
 
-	m_szBg = QSize(w / 13.6, w / 13.6 * 0.618);
+	m_szBackground = QSize(w / 13.6, w / 13.6 * 0.618);
 }
 
 
@@ -99,14 +99,17 @@ void BallancepathOpenglWidget::paintGL()
 	glLoadIdentity();
 
 	QMatrix4x4 matrix;
-	matrix.setToIdentity();
+	matrix.setToIdentity();														//重置为单位矩阵
 	matrix.translate(QVector3D(0, 0, -24));										//Y轴
 	matrix = m_mtx4Eye * matrix;												//设置看点
+	matrix.rotate(m_qtnPath);													//设置地图旋转度
+	glLoadMatrixf(matrix.data());												//加载矩阵
 
 	//绘制坐标系
-	matrix.rotate(m_qtnPath);													//设置地图旋转度
-	glLoadMatrixf(matrix.data());
 //	this->PaintCoordinate();
+
+	//绘制背景
+	this->PaintBackground();
 
 	//绘制地图
 	this->PaintPath();
@@ -180,7 +183,7 @@ void BallancepathOpenglWidget::timerEvent(QTimerEvent *event)
 		case Ballance::GAMESTATUS_LOSE:
 		{
 			++m_nTmDrop;
-			if (m_nTmDrop == PAINTFREQUENCY)
+			if (m_nTmDrop == PAINTFREQUENCY * 3)
 			{
 				m_parent->setStatus(Ballance::GAMESTATUS_PAUSE);
 				QMessageBox::StandardButton res;
@@ -423,37 +426,66 @@ void BallancepathOpenglWidget::PaintCoordinate()
 //	qDebug() << "BallancepathOpenglWidget::PaintCoordinate";
 
 	glBindTexture(GL_TEXTURE_2D, m_punTexture[0]);
-	glLineWidth(3);
-	glBegin(GL_LINES);
-	glColor3f(1.0, 0.0, 0.0);
-	glVertex3f(-COORDINATELENGTH, 0, 0);
-	glColor3f(0.0, 1.0, 1.0);
-	glVertex3f(COORDINATELENGTH, 0, 0);
-	glColor3f(0.0, 1.0, 0.0);
-	glVertex3f(0, -COORDINATELENGTH, 0);
-	glColor3f(1.0, 0.0, 1.0);
-	glVertex3f(0, COORDINATELENGTH, 0);
-	glEnd();
+	//网格线
 	glLineWidth(1);
 	glBegin(GL_LINES);
 	for (int i = -COORDINATELENGTH; i <= COORDINATELENGTH; ++i)
 	{
 		if (i == 0)
 			continue;
-		glColor3f(0.0, 0.0, 1.0);
+		//XoY
+//		glColor3f(0.0, 1.0, 1.0);
 //		glVertex3f(-COORDINATELENGTH, i, 0);
-		glVertex3f(-COORDINATELENGTH, i, -15);
-		glColor3f(1.0, 1.0, 0.0);
+//		glColor3f(1.0, 1.0, 0.0);
 //		glVertex3f(COORDINATELENGTH, i, 0);
-		glVertex3f(COORDINATELENGTH, i, -15);
-		glColor3f(0.0, 0.0, 1.0);
+//		glColor3f(0.0, 1.0, 1.0);
 //		glVertex3f(i, -COORDINATELENGTH, 0);
-		glVertex3f(i, -COORDINATELENGTH, -15);
-		glColor3f(1.0, 1.0, 0.0);
+//		glColor3f(1.0, 1.0, 0.0);
 //		glVertex3f(i, COORDINATELENGTH, 0);
-		glVertex3f(i, COORDINATELENGTH, -15);
+		//XoZ
+		glColor3f(0.0, 1.0, 1.0);
+		glVertex3f(i, 0, -COORDINATELENGTH);
+		glColor3f(1.0, 1.0, 0.0);
+		glVertex3f(i, 0, COORDINATELENGTH);
+		glColor3f(0.0, 1.0, 1.0);
+		glVertex3f(-COORDINATELENGTH, 0, i);
+		glColor3f(1.0, 1.0, 0.0);
+		glVertex3f(COORDINATELENGTH, 0, i);
+		//YoZ
+//		glColor3f(0.0, 1.0, 1.0);
+//		glVertex3f(0, i, -COORDINATELENGTH);
+//		glColor3f(1.0, 1.0, 0.0);
+//		glVertex3f(0, i, COORDINATELENGTH);
+//		glColor3f(0.0, 1.0, 1.0);
+//		glVertex3f(0, -COORDINATELENGTH, i);
+//		glColor3f(1.0, 1.0, 0.0);
+//		glVertex3f(0, COORDINATELENGTH, i);
 	}
 	glEnd();
+	glLineWidth(1);
+
+	//坐标轴
+	glLineWidth(3);
+	glBegin(GL_LINES);
+	//X轴
+	glColor3f(1.0, 0.0, 0.0);
+	glVertex3f(-COORDINATELENGTH, 0, 0);
+	glColor3f(0.0, 1.0, 1.0);
+	glVertex3f(COORDINATELENGTH, 0, 0);
+	//Y轴
+	glColor3f(0.0, 1.0, 0.0);
+	glVertex3f(0, -COORDINATELENGTH, 0);
+	glColor3f(1.0, 0.0, 1.0);
+	glVertex3f(0, COORDINATELENGTH, 0);
+	//Z轴
+	glColor3f(0.0, 0.0, 1.0);
+	glVertex3f(0, 0, -COORDINATELENGTH);
+	glColor3f(1.0, 1.0, 0.0);
+	glVertex3f(0, 0, COORDINATELENGTH);
+	glEnd();
+	glLineWidth(1);
+
+	//十倍点
 	glColor3f(1.0, 1.0, 1.0);
 	glPointSize(5);
 	glBegin(GL_POINTS);
@@ -461,12 +493,32 @@ void BallancepathOpenglWidget::PaintCoordinate()
 	{
 		for (int j = -COORDINATELENGTH; j <= COORDINATELENGTH; j += 10)
 		{
-//			glVertex3f(i, j, 0);
-			glVertex3f(i, j, -15);
+			glVertex3f(i, j, 0);
 		}
 	}
 	glEnd();
 	glPointSize(1);
+}
+
+
+
+/**
+ * @brief BallancepathOpenglWidget::PaintBackground
+ *		绘制背景
+ */
+void BallancepathOpenglWidget::PaintBackground()
+{
+	glBindTexture(GL_TEXTURE_2D, m_punTexture[2]);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0, 1.0);
+	glVertex3f(m_vct3Ball.x() - m_szBackground.width() / 2, m_vct3Ball.y() + m_szBackground.height(), m_vct3Ball.z() - 16);
+	glTexCoord2f(1.0, 1.0);
+	glVertex3f(m_vct3Ball.x() + m_szBackground.width() / 2, m_vct3Ball.y() + m_szBackground.height(), m_vct3Ball.z() - 16);
+	glTexCoord2f(1.0, 0.0);
+	glVertex3f(m_vct3Ball.x() + m_szBackground.width() / 2, m_vct3Ball.y(), m_vct3Ball.z() - 16);
+	glTexCoord2f(0.0, 0.0);
+	glVertex3f(m_vct3Ball.x() - m_szBackground.width() / 2, m_vct3Ball.y(), m_vct3Ball.z() - 16);
+	glEnd();
 }
 
 
@@ -479,22 +531,8 @@ void BallancepathOpenglWidget::PaintPath()
 {
 //	qDebug() << "BallancepathOpenglWidget::PaintPath";
 
-	//背景
-	glBindTexture(GL_TEXTURE_2D, m_punTexture[2]);
-	glBegin(GL_QUADS);
-	glTexCoord2f(0.0, 1.0);
-	glVertex3f(m_vct3Ball.x() - m_szBg.width() / 2, m_vct3Ball.y() + m_szBg.height(), m_vct3Ball.z() - 16);
-	glTexCoord2f(1.0, 1.0);
-	glVertex3f(m_vct3Ball.x() + m_szBg.width() / 2, m_vct3Ball.y() + m_szBg.height(), m_vct3Ball.z() - 16);
-	glTexCoord2f(1.0, 0.0);
-	glVertex3f(m_vct3Ball.x() + m_szBg.width() / 2, m_vct3Ball.y(), m_vct3Ball.z() - 16);
-	glTexCoord2f(0.0, 0.0);
-	glVertex3f(m_vct3Ball.x() - m_szBg.width() / 2, m_vct3Ball.y(), m_vct3Ball.z() - 16);
-	glEnd();
-
-	//地图
 	glBindTexture(GL_TEXTURE_2D, m_punTexture[0]);
-	glLineWidth(8);
+	glLineWidth(1);
 	int gameres = m_Path->foreachPathUnit(m_vct3Ball, [&](const CBallancePath::PathUnit &pu)
 	{
 		glRectf(pu.posx1, pu.posy1, pu.posx2, pu.posy2);

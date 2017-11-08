@@ -31,35 +31,35 @@ public:
 	public:
 		unsigned char mode;				//高四位pathtype、低四位路径正方向
 //		unsigned char gradient;			//坡度
-		int length;						//长度，以最小图片为一个单位
+		int unitamount;						//长度，以最小图片为一个单位
 		float posx1;
 		float posy1;
 		float posx2;
 		float posy2;
-		QSizeF *imagesize;
+		QSizeF *unitsize;
 
 		friend std::ostream &operator<<(std::ostream &os, PathUnit &path)
 		{
 			os << "CBallancePath::PathUnit: \n" <<
 				  "\t mode" << std::hex << (unsigned int)path.mode << std::dec <<
-				  "\t length" << path.length <<
+				  "\t unitamount" << path.unitamount <<
 				  "\t posx1" << path.posx1 <<
 				  "\t posy1" << path.posy1 <<
 				  "\t posx2" << path.posx2 <<
 				  "\t posy2" << path.posy2 <<
-				  "\t imagesize" << path.imagesize;
+				  "\t unitsize" << path.unitsize;
 			return os;
 		}
 #ifdef YL_WIN32_QT
 		friend QDebug operator<<(QDebug qd, PathUnit &path)
 		{
 			qd << "    mode" << hex << (unsigned int)path.mode <<
-				  "    length" << dec <<path.length <<
+				  "    unitamount" << dec <<path.unitamount <<
 				  "    posx1" << path.posx1 <<
 				  "    posy1" << path.posy1 <<
 				  "    posx2" << path.posx2 <<
 				  "    posy2" << path.posy2 <<
-				  "    imagesize" << path.imagesize->width() << path.imagesize->height();
+				  "    unitsize" << path.unitsize->width() << path.unitsize->height();
 			return qd;
 		}
 #endif
