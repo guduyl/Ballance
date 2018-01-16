@@ -32,16 +32,17 @@ public:
 		size_t nodeDepth;
 		T nodeData;
 
-		friend std::ostream &operator<< (std::ostream &os, NODE &n)
-		{
-			os << "YLTree4::NODE:::operator<<" << n.nodeData;
-			return os;
-		}
 #ifdef YL_WIN32_QT
 		friend QDebug operator<<(QDebug qd, NODE &n)
 		{
 			qd << "YLTree4::NODE:::operator<<" << n.nodeData;
 			return qd;
+		}
+#else
+		friend std::ostream &operator<< (std::ostream &os, NODE &n)
+		{
+			os << "YLTree4::NODE:::operator<<" << n.nodeData;
+			return os;
 		}
 #endif
 	};
@@ -631,18 +632,18 @@ public:
 
 
 
-	friend std::ostream &operator<< (std::ostream &os, YLTree4<T> &tree4)
-	{
-		os << "YLTree4::operator<<";
-		return os;
-	}
-
 #ifdef YL_WIN32_QT
 		friend QDebug operator<<(QDebug qd, YLTree4<T> &tree4)
 		{
 			qd << "YLTree4::operator<<";
 			return qd;
 		}
+#else
+	friend std::ostream &operator<< (std::ostream &os, YLTree4<T> &tree4)
+	{
+		os << "YLTree4::operator<<";
+		return os;
+	}
 #endif
 
 };

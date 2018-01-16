@@ -57,6 +57,7 @@ void BallancepathOpenglWidget::initializeGL()
 	glEnable(GL_DEPTH_TEST);													//启用深度测试
 	glDepthFunc(GL_LEQUAL);														//所作深度测试的类型
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);							//告诉系统对透视进行修正
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE);											//基于源象素alpha通道值的半透明混合函数
 
 	glEnable(GL_TEXTURE_2D);
 	this->LoadTexture();
@@ -413,6 +414,14 @@ void BallancepathOpenglWidget::LoadTexture()
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, tex.width(), tex.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, tex.bits());
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	buf.load(":/bgimg/path.jpg");
+	tex = QGLWidget::convertToGLFormat(buf);
+	glGenTextures(1, &m_punTexture[4]);
+	glBindTexture(GL_TEXTURE_2D, m_punTexture[4]);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, tex.width(), tex.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, tex.bits());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
 
@@ -530,14 +539,22 @@ void BallancepathOpenglWidget::PaintBackground()
 void BallancepathOpenglWidget::PaintPath()
 {
 //	qDebug() << "BallancepathOpenglWidget::PaintPath";
-
+	glEnable(GL_BLEND);															//打开混合
 	glBindTexture(GL_TEXTURE_2D, m_punTexture[0]);
+	glColor4f(0.1, 0.5, 1.0, 0.5);
 	glLineWidth(1);
 	int gameres = m_Path->foreachPathUnit(m_vct3Ball, [&](const CBallancePath::PathUnit &pu)
 	{
-		glRectf(pu.posx1, pu.posy1, pu.posx2, pu.posy2);
+		glBegin(GL_QUADS);
+		glVertex3f(pu.posx1, pu.posy1, 0);
+		glVertex3f(pu.posx2, pu.posy1, 0);
+		glVertex3f(pu.posx2, pu.posy2, 0);
+		glVertex3f(pu.posx1, pu.posy2, 0);
+		glEnd();
 	});
 	glLineWidth(1);
+	glColor4f(1.0, 1.0, 1.0, 1.0);
+	glDisable(GL_BLEND);														//关闭混合
 	this->CheckGameStatus(gameres);
 }
 

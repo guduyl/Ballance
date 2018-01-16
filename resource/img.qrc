@@ -2,6 +2,7 @@
     <qresource prefix="/bgimg">
         <file>earth.jpg</file>
         <file>map.jpg</file>
+        <file>path.jpg</file>
     </qresource>
     <qresource prefix="/icon">
         <file>earth1.ico</file>

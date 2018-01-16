@@ -65,7 +65,7 @@ void Ballance::mySetLayout()
 	//Main
 	this->resize(m_nWidth, m_nHeight);
 	this->setFixedSize(m_nWidth, m_nHeight);
-	QDesktopWidget* desktop = QApplication::desktop();
+	QDesktopWidget *desktop = QApplication::desktop();
 //	this->move((desktop->width() - m_nWidth) / 2 + 700, (desktop->height() - m_nHeight - 100) / 2);
 //	this->move((desktop->width() - m_nWidth) / 2 + 500, (desktop->height() - m_nHeight - 100) / 2);
 	this->move((desktop->width() - m_nWidth) / 2, (desktop->height() - m_nHeight - 100) / 2);

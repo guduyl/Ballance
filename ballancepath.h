@@ -38,29 +38,29 @@ public:
 		float posy2;
 		QSizeF *unitsize;
 
-		friend std::ostream &operator<<(std::ostream &os, PathUnit &path)
-		{
-			os << "CBallancePath::PathUnit: \n" <<
-				  "\t mode" << std::hex << (unsigned int)path.mode << std::dec <<
-				  "\t unitamount" << path.unitamount <<
-				  "\t posx1" << path.posx1 <<
-				  "\t posy1" << path.posy1 <<
-				  "\t posx2" << path.posx2 <<
-				  "\t posy2" << path.posy2 <<
-				  "\t unitsize" << path.unitsize;
-			return os;
-		}
 #ifdef YL_WIN32_QT
 		friend QDebug operator<<(QDebug qd, PathUnit &path)
 		{
-			qd << "    mode" << hex << (unsigned int)path.mode <<
-				  "    unitamount" << dec <<path.unitamount <<
+			qd << "    mode" << hex << (unsigned int)path.mode << dec <<
+				  "    unitamount" << path.unitamount <<
 				  "    posx1" << path.posx1 <<
 				  "    posy1" << path.posy1 <<
 				  "    posx2" << path.posx2 <<
 				  "    posy2" << path.posy2 <<
 				  "    unitsize" << path.unitsize->width() << path.unitsize->height();
 			return qd;
+		}
+#else
+		friend std::ostream &operator<<(std::ostream &os, PathUnit &path)
+		{
+			os << "    mode " << std::hex << (unsigned int)path.mode << std::dec <<
+				  "    unitamount " << setw(3) << path.unitamount <<
+				  "    posx1 " << setw(8) << path.posx1 <<
+				  "    posy1 " << setw(8) << path.posy1 <<
+				  "    posx2 " << setw(8) << path.posx2 <<
+				  "    posy2 " << setw(8) << path.posy2 <<
+				  "    unitsize " << path.unitsize->width() << "  " << path.unitsize->height();
+			return os;
 		}
 #endif
 	};
@@ -79,6 +79,10 @@ public:
 		});
 		return res;
 	}
+
+	static bool IsStart(const PathUnit &pu);
+	static bool IsStop(const PathUnit &pu);
+	static bool IsPath(const PathUnit &pu);
 
 	int check(const QVector3D &point, YLTree4<PathUnit>::NODE *punitnode);
 

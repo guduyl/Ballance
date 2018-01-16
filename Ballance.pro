@@ -53,7 +53,8 @@ DISTFILES += \
     resource/ballance.rc \
     README.md \
 	RECORD.md \
-    resource/img/map.jpg
+    resource/img/map.jpg \
+    resource/img/path.jpg
 
 
 

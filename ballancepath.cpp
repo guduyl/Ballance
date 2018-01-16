@@ -108,6 +108,57 @@ CBallancePath::~CBallancePath()
 
 
 
+
+
+bool CBallancePath::IsStart(const CBallancePath::PathUnit &pu)
+{
+	return (pu.mode & PATHTYPE) == PATHTYPESTART;
+}
+
+
+
+bool CBallancePath::IsStop(const CBallancePath::PathUnit &pu)
+{
+	return (pu.mode & PATHTYPE) == PATHTYPESTOP;
+}
+
+
+
+bool CBallancePath::IsPath(const CBallancePath::PathUnit &pu)
+{
+	return (pu.mode & PATHTYPE) == PATHTYPEWOOD3;
+}
+
+
+
+
+
+int CBallancePath::check(const QVector3D &point, YLTree4<PathUnit>::NODE *punitnode)
+{
+//	qDebug() << "CBallancePath::check";
+
+
+	PathUnit unit = punitnode->nodeData;
+	if (point.x() < unit.posx1 || point.x() > unit.posx2 ||
+			point.y() < unit.posy2 || point.y() > unit.posy1)
+	{
+		return -1;																//输
+	}
+	else if ((unit.mode & PATHTYPE) == PATHTYPESTOP &&
+			 (point.x() > unit.posx1 + unit.unitsize->width() / 3 &&
+			  point.x() < unit.posx2 + unit.unitsize->width() / 3 * 2 &&
+			  point.y() > unit.posy2 + unit.unitsize->height() / 3 &&
+			  point.y() < unit.posy1 + unit.unitsize->height() / 3 * 2))
+	{
+		return 1;																//赢
+	}
+	return 0;																	//游戏继续
+}
+
+
+
+
+
 void CBallancePath::InitData()
 {
 	qDebug() << "CBallancePath::initdata";
@@ -293,32 +344,6 @@ void CBallancePath::InitData()
 		}
 		}
 	});
-}
-
-
-
-
-
-int CBallancePath::check(const QVector3D &point, YLTree4<PathUnit>::NODE *punitnode)
-{
-//	qDebug() << "CBallancePath::check";
-
-
-	PathUnit unit = punitnode->nodeData;
-	if (point.x() < unit.posx1 || point.x() > unit.posx2 ||
-			point.y() < unit.posy2 || point.y() > unit.posy1)
-	{
-		return -1;																//输
-	}
-	else if ((unit.mode & PATHTYPE) == PATHTYPESTOP &&
-			 (point.x() > unit.posx1 + unit.unitsize->width() / 3 &&
-			  point.x() < unit.posx2 + unit.unitsize->width() / 3 * 2 &&
-			  point.y() > unit.posy2 + unit.unitsize->height() / 3 &&
-			  point.y() < unit.posy1 + unit.unitsize->height() / 3 * 2))
-	{
-		return 1;																//赢
-	}
-	return 0;																	//游戏继续
 }
 
 
