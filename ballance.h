@@ -1,4 +1,4 @@
-
+﻿
 #ifndef BALLANCE_H
 #define BALLANCE_H
 
@@ -19,6 +19,7 @@ public:
 	explicit Ballance(QWidget *parent = 0);
 	~Ballance();
 
+	//大哥，这么写真的好吗，确定不要分开写吗？
 	static enum enums
 	{
 		PAGE_START,
